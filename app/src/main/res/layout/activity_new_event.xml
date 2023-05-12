@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cz.cvut.fel.pda.bee_calendar.activities.NewEventActivity"
+    android:background="@color/yellow_200"
+    >
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/yellow_500"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextAppearance="@id/title"
+        app:menu="@menu/action_menu"
+        >
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:text="NEW EVENT"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/eventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@color/yellow_500"
+                android:ems="10"
+                android:hint="task name"
+                android:padding="0dp"
+                android:paddingStart="5dp"
+                android:selectAllOnFocus="true"
+                android:textSize="30dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="15dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date:"
+                    android:layout_marginStart="15dp"
+                    android:textSize="30dp"
+                    />
+                <TextView
+                    android:id="@+id/submitDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="1"
+                    android:background="@color/yellow_500"
+                    android:ems="10"
+                    android:hint="submit date"
+                    android:inputType="date"
+                    android:padding="0dp"
+                    android:paddingStart="5dp"
+                    android:selectAllOnFocus="true"
+                    android:textSize="30dp"
+                    android:textAlignment="center"/>
+
+                <android.widget.Button
+                    android:id="@+id/submitDateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_shapes"
+                    android:text="Pick"
+                    android:layout_marginEnd="15dp"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+
+<!--                <TextView-->
+<!--                    android:id="@+id/timeFrom"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="15dp"-->
+<!--                    android:layout_marginEnd="15dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@color/yellow_500"-->
+<!--                    android:ems="10"-->
+<!--                    android:hint="from"-->
+<!--                    android:inputType="time"-->
+<!--                    android:padding="0dp"-->
+<!--                    android:paddingStart="5dp"-->
+<!--                    android:selectAllOnFocus="true"-->
+<!--                    android:textSize="30dp" />-->
+
+                <android.widget.Button
+                    android:id="@+id/timeFrom"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_shapes"
+                    android:text="Pick time from"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"/>
+
+
+
+<!--                <EditText-->
+<!--                    android:id="@+id/timeTo"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="15dp"-->
+<!--                    android:layout_marginEnd="15dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@color/yellow_500"-->
+<!--                    android:ems="10"-->
+<!--                    android:hint="to"-->
+<!--                    android:inputType="time"-->
+<!--                    android:padding="0dp"-->
+<!--                    android:paddingStart="5dp"-->
+<!--                    android:selectAllOnFocus="true"-->
+<!--                    android:textSize="30dp" />-->
+
+                <android.widget.Button
+                    android:id="@+id/timeTo"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_shapes"
+                    android:text="Pick time to"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"/>
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@color/yellow_500"
+                android:ems="10"
+                android:hint="location"
+                android:padding="0dp"
+                android:paddingStart="5dp"
+                android:selectAllOnFocus="true"
+                android:textSize="30dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:layout_gravity="center"
+                    android:text="repeat:"
+                    android:paddingStart="5dp"
+                    android:layout_marginEnd="0dp"
+                    />
+
+                <Spinner
+                    android:id="@+id/repeat"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.7"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown"
+                    android:layout_margin="15dp"
+                    android:layout_marginStart="0dp"
+                    />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/showRepeat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="invisible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Repeat till:"
+                    android:layout_marginStart="15dp"
+                    android:textSize="25dp"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/repeatToDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="1"
+                    android:background="@color/yellow_500"
+                    android:ems="10"
+                    android:hint="date"
+                    android:inputType="date"
+                    android:padding="0dp"
+                    android:paddingStart="5dp"
+                    android:selectAllOnFocus="true"
+                    android:textSize="30dp" />
+
+                <android.widget.Button
+                    android:id="@+id/repeatDateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_shapes"
+                    android:text="Pick"
+                    android:layout_marginEnd="15dp"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/catText1"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:layout_gravity="center"
+                    android:text="category:"
+                    android:paddingStart="5dp"
+                    android:layout_marginEnd="0dp"
+                    />
+
+                <Spinner
+                    android:id="@+id/category"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.7"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown"
+                    android:layout_margin="15dp"
+                    android:layout_marginStart="0dp"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remind date:"
+                android:layout_marginStart="15dp"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/remindDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="1"
+                    android:background="@color/yellow_500"
+                    android:ems="10"
+                    android:hint="date"
+                    android:inputType="date"
+                    android:padding="0dp"
+                    android:paddingStart="5dp"
+                    android:selectAllOnFocus="true"
+                    android:textSize="30dp" />
+
+                <android.widget.Button
+                    android:id="@+id/remindDateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_shapes"
+                    android:text="Pick"
+                    android:layout_marginEnd="15dp"/>
+
+<!--                <EditText-->
+<!--                    android:id="@+id/remindTime"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="15dp"-->
+<!--                    android:layout_marginEnd="15dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@color/yellow_500"-->
+<!--                    android:ems="10"-->
+<!--                    android:hint="time"-->
+<!--                    android:inputType="time"-->
+<!--                    android:padding="0dp"-->
+<!--                    android:paddingStart="5dp"-->
+<!--                    android:selectAllOnFocus="true"-->
+<!--                    android:textSize="30dp" />-->
+
+                <android.widget.Button
+                    android:id="@+id/remindTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_shapes"
+                    android:text="time"
+                    android:layout_marginEnd="15dp"/>
+
+            </LinearLayout>
+
+
+            <EditText
+                android:id="@+id/notes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:autofillHints=""
+                android:background="@color/yellow_500"
+                android:baselineAligned="false"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="notes"
+                android:textSize="30dp"
+                android:paddingStart="5dp"
+                android:inputType="text|textMultiLine"
+                android:nestedScrollingEnabled="false"
+                />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+</RelativeLayout>
