@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.bee_calendar.dao.CategoryDao
 import cz.cvut.fel.pda.bee_calendar.model.Category
 
-class CategoryListAdapter : ListAdapter<Category, CategoryListAdapter.CategoryViewHolder>(WORDS_COMPARATOR) {
+class CategoryListAdapter(private val listener: Listener) : ListAdapter<Category, CategoryListAdapter.CategoryViewHolder>(WORDS_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         return CategoryViewHolder.create(parent)
@@ -20,10 +20,11 @@ class CategoryListAdapter : ListAdapter<Category, CategoryListAdapter.CategoryVi
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.name)
+        holder.bind(current)
 
         holder.itemView.findViewById<ImageButton>(R.id.catDelButton).setOnClickListener {
                 println("***************************222222 "+ getItem(position).id)
+                listener.deleteCategory(getItem(position).id)
                 //зробити спінер і кнопку видалення одну, бо це якийсь треш((
         }
     }
@@ -35,8 +36,8 @@ class CategoryListAdapter : ListAdapter<Category, CategoryListAdapter.CategoryVi
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryItemView: TextView = itemView.findViewById(R.id.textView)
 
-        fun bind(text: String?) {
-            categoryItemView.text = text
+        fun bind(cat: Category) {
+            categoryItemView.text = cat.name
         }
 
         companion object {
@@ -58,5 +59,9 @@ class CategoryListAdapter : ListAdapter<Category, CategoryListAdapter.CategoryVi
                 return oldItem.name == newItem.name
             }
         }
+    }
+
+    interface Listener {
+        fun deleteCategory(catId: Int?)
     }
 }

@@ -73,7 +73,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:orientation="horizontal"
             >
 
@@ -110,13 +110,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="dd.mm.yyyy"
-                    android:textSize="27dp"
-                    android:layout_margin="5dp"
+                    android:textSize="24dp"
+                    android:layout_marginHorizontal="5dp"
                     />
-<!--                <ScrollView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    >-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/l"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        tools:listitem="@layout/schedule_fragment"
+                        android:padding="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
 <!--                    <LinearLayout-->
 <!--                        android:layout_width="match_parent"-->
 <!--                        android:layout_height="wrap_content"-->
@@ -126,7 +144,7 @@
 <!--                            />-->
 <!--                    </LinearLayout>-->
 
-<!--                </ScrollView>-->
+                </ScrollView>
 <!--                <include-->
 <!--                    android:id="@+id/schedule_events"-->
 <!--                    layout="@layout/scroll_view_main_activity"/>-->

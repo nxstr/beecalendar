@@ -15,7 +15,7 @@ interface EventDao {
     @Query("SELECT * FROM Events WHERE userId = :userId")
     fun getAllEventsFlow(userId: Int): Flow<List<Event>>
 
-    @Query("SELECT * FROM Events WHERE userId = :userId AND date = :date")
+    @Query("SELECT * FROM Events WHERE userId = :userId AND date = :date ORDER BY timeFrom ASC")
     fun getAllEventsByDateFlow(userId: Int, date: String): Flow<List<Event>>
 
     @Query("SELECT * FROM Events WHERE id = :id")
@@ -26,6 +26,9 @@ interface EventDao {
 
     @Query("SELECT * FROM Events WHERE categoryId = :categoryId")
     suspend fun getAllEventsByCategory(categoryId: Int): List<Event>
+
+    @Query("SELECT * FROM Events WHERE userId = :userId AND categoryId = :categoryId")
+    fun getAllEventsByCategoryFlow(userId: Int, categoryId: Int): Flow<List<Event>>
 
     @Insert
     suspend fun insert(vararg event: Event)

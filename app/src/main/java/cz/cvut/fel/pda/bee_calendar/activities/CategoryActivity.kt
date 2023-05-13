@@ -12,12 +12,19 @@ import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityCategoryBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
+import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 
-class CategoryActivity: AppCompatActivity() {
+class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
     private lateinit var binding: ActivityCategoryBinding
+
+    private var default: Int? = null
 
     private val categoryViewModel: CategoryViewModel by viewModels {
         CategoryViewModel.CategoryViewModelFactory(this)
+    }
+
+    private val eventViewModel: EventViewModel by viewModels {
+        EventViewModel.EventViewModelFactory(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +36,7 @@ class CategoryActivity: AppCompatActivity() {
 
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = CategoryListAdapter()
+        val adapter = CategoryListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -41,13 +48,15 @@ class CategoryActivity: AppCompatActivity() {
                 for(i in it){
                     if(!i.name.equals("default")) {
                         arr.add(i)
+                    }else{
+                        default = i.id
                     }
                 }
                 adapter.submitList(arr)
-
-                for(i in arr){
-                    println("arr item ================" + i.name)
-                }
+//
+//                for(i in arr){
+//                    println("arr item ================" + i.name)
+//                }
             }
         }
 
@@ -68,5 +77,20 @@ class CategoryActivity: AppCompatActivity() {
             finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun deleteCategory(catId: Int?) {
+        if(catId!=null && default!=null){
+            eventViewModel.getEventsByCatFlow(catId).observe(this){ events ->
+                events.let {
+                    for(i in it){
+                        i.categoryId = default as Int
+                        eventViewModel.updateEvent(i)
+                    }
+                }
+
+            }
+            categoryViewModel.delete(catId)
+        }
     }
 }

@@ -25,6 +25,8 @@ import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.collections.ArrayList
@@ -193,7 +195,7 @@ class NewEventActivity : AppCompatActivity() {
 
         mTimePicker = TimePickerDialog(this, object : TimePickerDialog.OnTimeSetListener {
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                time.setText(String.format("%d:%d", hourOfDay, minute))
+                time.setText(LocalTime.of(hourOfDay, minute).format(DateTimeFormatter.ofPattern("HH:mm")))
             }
         }, hour, minute, true)
 //            mTimePicker.getWindow()?.setBackgroundDrawableResource(android.R.color.transparent);
@@ -389,10 +391,8 @@ class NewEventActivity : AppCompatActivity() {
         eventViewModel.insertEvent(
             cz.cvut.fel.pda.bee_calendar.model.Event(
                 name = binding.eventName.text.toString(),
-                date = (date.dayOfMonth.toString() + "."
-                        + (date.monthValue) + "." + date.year),
-                remind = (remindDate.dayOfMonth.toString() + "."
-                        + (remindDate.monthValue) + "." + remindDate.year) + "/" + binding.remindTime.text.toString(),
+                date = date.toString(),
+                remind = remindDate.toString() + "/" + binding.remindTime.text.toString(),
                 notes = binding.notes.text.toString(),
                 categoryId = catId,
                 userId = eventViewModel.loggedUser?.id!!,
@@ -400,8 +400,7 @@ class NewEventActivity : AppCompatActivity() {
                 timeFrom = binding.timeFrom.text.toString(),
                 timeTo = binding.timeTo.text.toString(),
                 repeatEnum = repeatE,
-                repeatTo = (repeatTillDate.dayOfMonth.toString() + "."
-                        + (repeatTillDate.monthValue) + "." + repeatTillDate.year)
+                repeatTo = repeatTillDate.toString()
             )
         )
     }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cz.cvut.fel.pda.bee_calendar.activities.NewEventActivity"
+    tools:context="cz.cvut.fel.pda.bee_calendar.activities.EventDetailsActivity"
     android:background="@color/yellow_200"
     >
 
@@ -49,7 +49,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/taskName"
+                android:id="@+id/eventName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -103,15 +103,36 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/location"
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:ems="10"
-                android:text="location"
-                android:textSize="25dp" />
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="Location:"
+                    android:layout_marginEnd="0dp"
+                    />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:ems="10"
+                    android:text="location"
+                    android:textSize="25dp" />
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -130,6 +151,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/categoryName"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
@@ -159,6 +181,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/repeatType"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
@@ -186,6 +209,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/remind"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"

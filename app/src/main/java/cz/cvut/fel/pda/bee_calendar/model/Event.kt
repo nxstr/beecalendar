@@ -17,7 +17,7 @@ data class Event(
     override val date: String,
     override val remind: String,
     override val notes: String?,
-    override val categoryId: Int,
+    override var categoryId: Int,
     override val userId: Int,
 
     val location: String?,
@@ -30,4 +30,4 @@ data class Event(
 
     val repeatTo: String?
 
-): Action()
+): Action(), java.io.Serializable

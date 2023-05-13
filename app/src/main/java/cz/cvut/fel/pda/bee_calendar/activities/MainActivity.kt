@@ -1,6 +1,7 @@
 package cz.cvut.fel.pda.bee_calendar.activities
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -8,19 +9,29 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import android.widget.CalendarView.OnDateChangeListener
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import cz.cvut.fel.pda.bee_calendar.CategoryListAdapter
+import cz.cvut.fel.pda.bee_calendar.EventListAdapter
 import cz.cvut.fel.pda.bee_calendar.R
+import cz.cvut.fel.pda.bee_calendar.model.Category
+import cz.cvut.fel.pda.bee_calendar.model.Event
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
     // on below line we are creating
     // variables for text view and calendar view
 
@@ -33,6 +44,7 @@ class MainActivity : AppCompatActivity(){
     lateinit var fab: FloatingActionButton
     lateinit var drawer: DrawerLayout
     private lateinit var sp: SharedPreferences
+    private lateinit var editLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var user: User
 
@@ -100,6 +112,36 @@ class MainActivity : AppCompatActivity(){
 
         fab = findViewById(R.id.fab)
         registerForContextMenu(fab)
+
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
+        val adapter = EventListAdapter(this)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        eventViewModel.getEventsByDate(LocalDate.now()).observe(this) { words ->
+            // Update the cached copy of the words in the adapter.
+            words.let {
+
+//                val arr = ArrayList<Event>()
+//                for(i in it){
+//                    if(!i.name.equals("default")) {
+//                        arr.add(i)
+//                    }
+//                }
+//                val arr = eventViewModel.getEventsByDate(LocalDate.now())
+//                println("events here********************")
+//                for(i in it){
+////                    println("arr item ================" + i.name + " " + LocalTime.parse(i.timeFrom, DateTimeFormatter.ofPattern("hh:mm")))
+//
+//                }
+                adapter.submitList(it)
+
+//                for(i in arr){
+//                    println("arr item ================" + i.name)
+//                }
+            }
+        }
 
     }
 
@@ -201,7 +243,23 @@ class MainActivity : AppCompatActivity(){
         return true
     }
 
-
+    override fun onClickItem(event: Event) {
+//        editLauncher = registerForActivityResult(
+//            ActivityResultContracts.StartActivityForResult()) {
+////            if (it.resultCode == Activity.RESULT_OK) {
+////                eventViewModel.insertEvent(it.data?.getSerializableExtra("new-event") as Event)
+//////                println("44444444444444444444444" + it.data + " " + it.resultCode)
+////            }
+//        }
+//        startActivity(Intent(this, NewEventActivity::class.java))
+        println("clicked =================== " + event.name)
+        val intent = Intent(this, EventDetailsActivity::class.java).apply {
+            putExtra("event-detail", event)
+        }
+//        editLauncher.launch(intent)
+        startActivity(intent)
+        //start event details activity!!!
+    }
 
 
 }

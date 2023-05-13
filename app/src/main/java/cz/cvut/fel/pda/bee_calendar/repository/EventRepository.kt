@@ -18,6 +18,10 @@ class EventRepository(
         return eventDao.getAllEventsByDateFlow(userId, date)
     }
 
+    fun getAllByCat(userId: Int, catId: Int): Flow<List<Event>> {
+        return eventDao.getAllEventsByCategoryFlow(userId, catId)
+    }
+
     @WorkerThread
     suspend fun getAll(userId: Int): List<Event> {
         return eventDao.getAllEvents(userId)

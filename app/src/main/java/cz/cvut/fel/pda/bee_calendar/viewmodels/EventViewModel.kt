@@ -39,6 +39,10 @@ class EventViewModel(
         return eventRepository.getAllByDate(loggedInUserId, date.toString()).asLiveData()
     }
 
+    fun getEventsByCatFlow(catId: Int): LiveData<List<Event>>{
+        return eventRepository.getAllByCat(loggedInUserId, catId).asLiveData()
+    }
+
     fun insertEvent(newEvent: Event) = viewModelScope.launch {
         eventRepository.insert(newEvent)
     }
