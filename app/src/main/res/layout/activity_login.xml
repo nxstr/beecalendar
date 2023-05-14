@@ -5,10 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="cz.cvut.fel.pda.bee_calendar.activities.LoginActivity"
-    android:paddingHorizontal="32dp"
     android:background="@color/yellow_200"
-    android:gravity="center"
     >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/yellow_200"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="32dp"
+        android:gravity="center">
 
     <TextView
         android:id="@+id/login_activity_label"
@@ -57,6 +70,18 @@
         android:layout_centerHorizontal="true"
         />
 
+        <android.widget.Button
+            android:layout_marginTop="25dp"
+            android:id="@+id/registrationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_password_submit"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/button_shapes"
+            android:paddingHorizontal="15dp"
+            android:text="Registration"
+            />
+
     <TextView
         android:id="@+id/login_link_to_sing_up"
         android:layout_width="wrap_content"
@@ -64,6 +89,8 @@
         android:layout_below="@id/login_password_submit"
         android:layout_centerInParent="true"
         android:layout_marginTop="24dp"
+
         />
 
+</RelativeLayout>
 </RelativeLayout>

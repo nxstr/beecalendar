@@ -9,10 +9,13 @@ import android.text.Spanned
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.viewmodels.UserViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -33,6 +36,8 @@ class LoginActivity : AppCompatActivity() {
         sp = getSharedPreferences("logged-in-user", MODE_PRIVATE)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (sp.contains("user-id")) {
             println("here------------------------" + sp.all)
@@ -46,25 +51,42 @@ class LoginActivity : AppCompatActivity() {
         handleLogin()
     }
 
-    private fun registrationLink() {
-        val clickableSpan = object : ClickableSpan() {
-            override fun onClick(textView: View) {
-                startActivity(
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+//    private fun registrationLink() {
+//        val clickableSpan = object : ClickableSpan() {
+//            override fun onClick(textView: View) {
+//                startActivity(
+//                    Intent(this@LoginActivity, RegistrationActivity::class.java)
+//                )
+//            }
+//            override fun updateDrawState(ds: TextPaint) {
+//                super.updateDrawState(ds)
+//                ds.isUnderlineText = false
+//            }
+//        }
+//
+//        val spannableString = SpannableString("Registration")
+//        spannableString.setSpan(clickableSpan, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//        binding.loginLinkToSingUp.apply {
+//            text = spannableString
+//            movementMethod = LinkMovementMethod.getInstance()
+//            highlightColor = Color.TRANSPARENT
+//            setTextColor(Color.BLACK)
+//        }
+//    }
+
+    private fun registrationLink(){
+        val registrationButton = binding.registrationButton
+        registrationButton.setOnClickListener {
+            startActivity(
                     Intent(this@LoginActivity, RegistrationActivity::class.java)
                 )
-            }
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
-            }
-        }
-
-        val spannableString = SpannableString("Don't have an account? Sing up")
-        spannableString.setSpan(clickableSpan, 23, 30, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        binding.loginLinkToSingUp.apply {
-            text = spannableString
-            movementMethod = LinkMovementMethod.getInstance()
-            highlightColor = Color.TRANSPARENT
         }
     }
 

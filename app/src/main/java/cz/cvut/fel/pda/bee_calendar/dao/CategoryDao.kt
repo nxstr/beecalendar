@@ -27,8 +27,8 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories WHERE id = :id")
     suspend fun getById(id: Int): Category?
 
-    @Query("SELECT * FROM Categories WHERE name = :name")
-    suspend fun getByName(name: String): Category?
+    @Query("SELECT * FROM Categories WHERE name = :name AND userId = :userId")
+    suspend fun getByName(userId: Int, name: String): Category?
 
     @Query("DELETE FROM Categories")
     suspend fun deleteAll()

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityRegistrationBinding
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.repository.UserRepository
@@ -30,12 +31,8 @@ class RegistrationActivity : AppCompatActivity() {
         sp = getSharedPreferences("logged-in-user", MODE_PRIVATE)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.registrationToolbar)
-
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            title = ""
-        }
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         handleLoginContext()
     }

@@ -131,10 +131,10 @@
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+<!--                <ScrollView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    >-->
 <!--                    <LinearLayout-->
 <!--                        android:layout_width="match_parent"-->
 <!--                        android:layout_height="wrap_content"-->
@@ -144,7 +144,7 @@
 <!--                            />-->
 <!--                    </LinearLayout>-->
 
-                </ScrollView>
+<!--                </ScrollView>-->
 <!--                <include-->
 <!--                    android:id="@+id/schedule_events"-->
 <!--                    layout="@layout/scroll_view_main_activity"/>-->

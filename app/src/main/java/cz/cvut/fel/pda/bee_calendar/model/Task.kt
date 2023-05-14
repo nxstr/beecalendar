@@ -9,19 +9,19 @@ data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
 
-    override val name: String,
-    override val date: String,
-    override val remind: String,
-    override val notes: String? = null,
-    override val categoryId: Int,
-    override val userId: Int,
+    override var name: String,
+    override var date: String,
+    override var remind: String,
+    override var notes: String? = null,
+    override var categoryId: Int,
+    override var userId: Int,
 
-    val deadlineTime: String,
-    val isActive: Boolean = true,
+    var deadlineTime: String,
+    var isActive: Boolean = true,
 
     @ColumnInfo(name = "priority_enum")
     @TypeConverters(PriorityConverter::class)
-    val priority: PriorityEnum
+    var priority: PriorityEnum
 
 
 ) : Action()

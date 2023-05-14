@@ -1,16 +1,18 @@
-package cz.cvut.fel.pda.bee_calendar
+package cz.cvut.fel.pda.bee_calendar.utils
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.model.Event
 
-class EventListAdapter (private val listener: Listener): ListAdapter<Event, EventListAdapter.EventViewHolder>(WORDS_COMPARATOR) {
+class EventListAdapter (private val listener: Listener): ListAdapter<Event, EventListAdapter.EventViewHolder>(
+    WORDS_COMPARATOR
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         return EventViewHolder.create(parent)

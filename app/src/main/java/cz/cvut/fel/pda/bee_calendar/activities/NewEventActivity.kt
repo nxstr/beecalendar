@@ -1,7 +1,5 @@
 package cz.cvut.fel.pda.bee_calendar.activities
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -10,7 +8,6 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.isDigitsOnly
 import androidx.core.view.get
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asFlow
@@ -19,7 +16,9 @@ import androidx.lifecycle.liveData
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityNewEventBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
+import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
+import cz.cvut.fel.pda.bee_calendar.utils.EventActivityUtil
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +33,10 @@ import kotlin.collections.ArrayList
 
 class NewEventActivity : AppCompatActivity() {
 
+    private lateinit var eventUtil: EventActivityUtil
+
     private lateinit var binding: ActivityNewEventBinding
+    private var event : Event? = null
     private var repeatE: RepeatEnum = RepeatEnum.ONCE
 
     private var submitDatePicked: LocalDate? = null
@@ -56,66 +58,33 @@ class NewEventActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        spinner()
+
+        if(intent.extras!=null){
+            event = intent.extras?.get("event-detail") as Event
+            binding.title.text = "EDIT EVENT"
+            setData(event!!)
+        }
+
         repeatSpinner()
         categorySpinner()
+        eventUtil = EventActivityUtil()
         binding.submitDateButton.setOnClickListener {
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(this,
-                { view, year, monthOfYear, dayOfMonth ->
-                    submitDatePicked = LocalDate.of(year, monthOfYear+1, dayOfMonth)
-                    binding.submitDate.text = (dayOfMonth.toString() + "." + (monthOfYear + 1) + "." + year)
-                },
-                year,
-                month,
-                day
-            )
-            datePickerDialog.show()
+            eventUtil.datePicker(binding.submitDate, this)
         }
 
         binding.remindDateButton.setOnClickListener {
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(this,
-                { view, year, monthOfYear, dayOfMonth ->
-                    remindDatePicked = LocalDate.of(year, monthOfYear+1, dayOfMonth)
-                    binding.remindDate.text = (dayOfMonth.toString() + "." + (monthOfYear + 1) + "." + year)
-                },
-                year,
-                month,
-                day
-            )
-            datePickerDialog.show()
+            eventUtil.datePicker(binding.remindDate, this)
         }
 
         binding.timeFrom.setOnClickListener {
-            times(binding.timeFrom)
+            eventUtil.times(binding.timeFrom, this)
         }
         binding.timeTo.setOnClickListener {
-            times(binding.timeTo)
+            eventUtil.times(binding.timeTo, this)
         }
         binding.remindTime.setOnClickListener {
-            times(binding.remindTime)
+            eventUtil.times(binding.remindTime, this)
         }
-    }
-
-    private fun times(time: Button) {
-        val mTimePicker: TimePickerDialog
-        val mcurrentTime = Calendar.getInstance()
-        val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
-        val minute = mcurrentTime.get(Calendar.MINUTE)
-
-        mTimePicker = TimePickerDialog(this, object : TimePickerDialog.OnTimeSetListener {
-            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                time.setText(LocalTime.of(hourOfDay, minute).format(DateTimeFormatter.ofPattern("HH:mm")))
-            }
-        }, hour, minute, true)
-        mTimePicker.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -131,8 +100,13 @@ class NewEventActivity : AppCompatActivity() {
                         this,
                         "Saved", Toast.LENGTH_SHORT
                     ).show()
-                    setResult()
-                    finish()
+                    if(event!=null){
+                        setResultForUpdate(event!!)
+                        startActivity(Intent(this, MainActivity::class.java))
+                    }else {
+                        setResult()
+                        finish()
+                    }
                 }
             }else{
                 Toast.makeText(this,
@@ -144,18 +118,48 @@ class NewEventActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun setData(event: Event){
+        binding.eventName.setText(event.name)
+        binding.submitDate.text = event.date
+        submitDatePicked = LocalDate.parse(event.date, DateTimeFormatter.ISO_DATE)
+        binding.timeFrom.text = event.timeFrom
+        binding.timeTo.text = event.timeTo
+        if(event.location!=null){
+            binding.location.setText(event.location)
+        }
+        if(event.notes!=null){
+            binding.notes.setText(event.notes)
+        }
+        if(event.remind!=""){
+            binding.remindDate.text = event.remind.split("/").get(0)
+            remindDatePicked = LocalDate.parse(event.remind.split("/").get(0), DateTimeFormatter.ISO_DATE)
+            binding.remindTime.text = event.remind.split("/").get(1)
+        }
+
+    }
+
     private fun validateName(): Boolean{
         var exists = true
         runBlocking {
-            println("---------------- event " + eventViewModel.getByName(binding.eventName.text.toString()))
-            if(!eventViewModel.getByName(binding.eventName.text.toString()).isEmpty()){
-                exists = false
+            if((event!=null && binding.eventName.text.toString()!= event!!.name) || (event==null)){
+                if (!eventViewModel.getByName(binding.eventName.text.toString()).isEmpty()) {
+                    exists = false
+                }
             }
         }
         return exists
     }
 
     private fun validateDateTime(): Boolean{
+        if(binding.submitDate.text.toString()!="submit date"){
+            submitDatePicked = LocalDate.parse(binding.submitDate.text, DateTimeFormatter.ISO_DATE)
+        }
+        if(binding.remindDate.text.toString()!="date"){
+            remindDatePicked = LocalDate.parse(binding.remindDate.text, DateTimeFormatter.ISO_DATE)
+        }
+        if(binding.repeatToDate.text.toString()!="date"){
+            repeatDatePicked = LocalDate.parse(binding.repeatToDate.text, DateTimeFormatter.ISO_DATE)
+        }
         if(submitDatePicked==null){
             Toast.makeText(this,
                 "Date is necessary!", Toast.LENGTH_SHORT).show()
@@ -182,6 +186,7 @@ class NewEventActivity : AppCompatActivity() {
             }
         }
         if(!repeatE.equals(RepeatEnum.ONCE) ) {
+            println("dateeeeeeeeeeeeeeeeeee " + repeatDatePicked)
             if(submitDatePicked!=null && repeatDatePicked!=null) {
                 if (submitDatePicked!!.isAfter(repeatDatePicked)) {
                     Toast.makeText(
@@ -200,25 +205,73 @@ class NewEventActivity : AppCompatActivity() {
         }
         return true
     }
-    private fun datePicker(sbd: TextView){
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-        val datePickerDialog = DatePickerDialog(this,
-            { view, year, monthOfYear, dayOfMonth ->
-                repeatDatePicked = LocalDate.of(year, monthOfYear+1, dayOfMonth)
-                sbd.text = (dayOfMonth.toString() + "." + (monthOfYear + 1) + "." + year)
 
-            },
-            year,
-            month,
-            day
-        )
-        datePickerDialog.show()
+
+    private fun setResultForUpdate(event: Event){
+        if(repeatE==RepeatEnum.ONCE && event.repeatEnum==repeatE){
+            event.name = binding.eventName.text.toString()
+            event.location = binding.location.text.toString()
+            event.notes = binding.notes.text.toString()
+            event.timeFrom = binding.timeFrom.text.toString()
+            event.timeTo = binding.timeTo.text.toString()
+            event.categoryId = catId
+            event.date = submitDatePicked.toString()
+            event.repeatTo = submitDatePicked.toString()
+            if(remindDatePicked==null){
+                event.remind = ""
+            }else{
+                event.remind = remindDatePicked.toString() + "/" + binding.remindTime.text.toString()
+            }
+            eventViewModel.updateEvent(event)
+        }else if(repeatE!=RepeatEnum.ONCE && repeatE==event.repeatEnum){
+            if(submitDatePicked.toString()==event.date && repeatDatePicked.toString() == event.repeatTo){
+                //якщо не змінилась основна дата і не змінився репіт взагалі
+                if((remindDatePicked!=null && remindDatePicked.toString()==event.remind.split("/").get(0)) ||
+                            (remindDatePicked==null && event.remind=="")){
+                    //якщо при цьому ремайнд існує і дата ремайнду не змінилась
+                    // або якщо ремайнду не існувало і не існує
+                    runBlocking {
+                        for(ev in eventViewModel.getByName(event.name)){
+                            ev.name = binding.eventName.text.toString()
+                            ev.location = binding.location.text.toString()
+                            ev.notes = binding.notes.text.toString()
+                            ev.timeFrom = binding.timeFrom.text.toString()
+                            ev.timeTo = binding.timeTo.text.toString()
+                            ev.categoryId = catId
+                            eventViewModel.updateEvent(ev)
+                        }
+                    }
+                }else{
+                    runBlocking {
+                        var arr = eventViewModel.getByName(event.name).toMutableList()
+                        for (ev in arr) {
+                            ev.id?.let { eventViewModel.deleteEvent(it) }
+                        }
+                        setResult()
+                    }
+                }
+            }else{
+                runBlocking {
+                    var arr = eventViewModel.getByName(event.name).toMutableList()
+                    for (ev in arr) {
+                        ev.id?.let { eventViewModel.deleteEvent(it) }
+                    }
+                    setResult()
+                }
+            }
+        }else if(repeatE!=event.repeatEnum){
+            runBlocking {
+                var arr = eventViewModel.getByName(event.name).toMutableList()
+                for (ev in arr) {
+                    ev.id?.let { eventViewModel.deleteEvent(it) }
+                }
+                setResult()
+            }
+        }
     }
 
     private fun setResult() {
+
         if(repeatE==RepeatEnum.EVERY_DAY){
             var i = 0
             val start = ChronoUnit.DAYS.between(submitDatePicked, repeatDatePicked)
@@ -266,24 +319,28 @@ class NewEventActivity : AppCompatActivity() {
         )
     }
 
-    private fun spinner(){
-        binding.category?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                catId = 1
-            }
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                catId = 1
-            }
-
-        }
-    }
-
     private fun repeatSpinner() {
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, RepeatEnum.values())
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         binding.repeat.adapter = arrayAdapter
+
+        if(event!=null){
+            runBlocking {
+                RepeatEnum.values().forEach { catWrap ->
+                    if (event!!.repeatEnum == catWrap) {
+                        binding.repeat.setSelection(arrayAdapter.getPosition(catWrap))
+                        return@forEach
+                    }
+                }
+            }
+
+            if(event!!.repeatEnum!=RepeatEnum.ONCE){
+                binding.showRepeat.visibility = View.VISIBLE
+                binding.repeatToDate.text = event!!.repeatTo
+            }
+        }
 
         binding.repeat.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -301,8 +358,7 @@ class NewEventActivity : AppCompatActivity() {
 
                     binding.showRepeat.visibility = View.VISIBLE
                     binding.repeatDateButton.setOnClickListener {
-                        datePicker(binding.repeatToDate)
-
+                        eventUtil.datePicker(binding.repeatToDate, this@NewEventActivity)
                     }
                 }else{
                     binding.showRepeat.visibility = View.INVISIBLE
@@ -312,9 +368,6 @@ class NewEventActivity : AppCompatActivity() {
     }
 
     private fun categorySpinner(){
-
-        var a = kotlin.collections.ArrayList<Category>()
-
         val nameObserver = androidx.lifecycle.Observer<List<Category>> { newName ->
             val arr = kotlin.collections.ArrayList<String>()
             for(i in newName){
@@ -325,6 +378,18 @@ class NewEventActivity : AppCompatActivity() {
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
             binding.category.adapter = arrayAdapter
+
+            if(event!=null){
+                runBlocking {
+                    arr.forEach { catWrap ->
+                        if (categoryViewModel.getById(event!!.categoryId)?.name == catWrap) {
+                            binding.category.setSelection(arrayAdapter.getPosition(catWrap))
+                            catId = event!!.categoryId
+                            return@forEach
+                        }
+                    }
+                }
+            }
 
             binding.category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

@@ -13,21 +13,21 @@ data class Event(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
 
-    override val name: String,
-    override val date: String,
-    override val remind: String,
-    override val notes: String?,
+    override var name: String,
+    override var date: String,
+    override var remind: String,
+    override var notes: String?,
     override var categoryId: Int,
-    override val userId: Int,
+    override var userId: Int,
 
-    val location: String?,
-    val timeFrom: String,
-    val timeTo: String,
+    var location: String?,
+    var timeFrom: String,
+    var timeTo: String,
 
     @ColumnInfo(name="repeat_enum")
     @TypeConverters(RepeatConverter::class)
-    val repeatEnum: RepeatEnum,
+    var repeatEnum: RepeatEnum,
 
-    val repeatTo: String?
+    var repeatTo: String?
 
 ): Action(), java.io.Serializable

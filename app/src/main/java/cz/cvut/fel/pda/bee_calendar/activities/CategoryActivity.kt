@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cz.cvut.fel.pda.bee_calendar.CategoryListAdapter
+import cz.cvut.fel.pda.bee_calendar.utils.CategoryListAdapter
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityCategoryBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category

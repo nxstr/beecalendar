@@ -76,7 +76,7 @@ class EventDetailsActivity: AppCompatActivity() {
         }else if (item.itemId == R.id.navigation_item_edit) {
             Toast.makeText(this,
                 "Edit", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, EditEventActivity::class.java).apply {
+            val intent = Intent(this, NewEventActivity::class.java).apply {
                 putExtra("event-detail", event)
             }
             startActivity(intent)

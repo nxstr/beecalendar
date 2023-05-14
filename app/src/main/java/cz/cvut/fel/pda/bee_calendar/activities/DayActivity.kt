@@ -7,6 +7,9 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -14,6 +17,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.activities.*
 import cz.cvut.fel.pda.bee_calendar.model.User
@@ -21,16 +26,32 @@ import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import cz.cvut.fel.pda.bee_calendar.databinding.ActivityDayBinding
+import cz.cvut.fel.pda.bee_calendar.model.Category
+import cz.cvut.fel.pda.bee_calendar.model.Event
+import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
+import cz.cvut.fel.pda.bee_calendar.utils.EventListAdapter
+import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
-class DayActivity : AppCompatActivity() {
+class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
 
     lateinit var date: TextView
     lateinit var bottomNav : BottomNavigationView
     lateinit var toolbar_value : TextView
+    private var actualDate: LocalDate = LocalDate.now()
+    private lateinit var binding: ActivityDayBinding
+    private lateinit var adapter: EventListAdapter
 
     private val eventViewModel: EventViewModel by viewModels {
         EventViewModel.EventViewModelFactory(this)
+    }
+
+    private val categoryViewModel: CategoryViewModel by viewModels {
+        CategoryViewModel.CategoryViewModelFactory(this)
     }
 
     private lateinit var sp: SharedPreferences
@@ -41,10 +62,12 @@ class DayActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        binding = ActivityDayBinding.inflate(layoutInflater)
         setContentView(R.layout.left_drawer_day)
         setSupportActionBar(findViewById(R.id.toolbar))
         //home navigation
 
+        eventsSpinner()
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         date = findViewById(R.id.date)
@@ -57,35 +80,114 @@ class DayActivity : AppCompatActivity() {
         user = eventViewModel.loggedUser!!
 
 
-        var d1 = LocalDate.now()
-        date.setText((d1.dayOfMonth).toString() + "." + (d1.monthValue).toString() + "." + d1.year.toString())
+        date.setText(actualDate.toString())
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
+        adapter = EventListAdapter(this)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         val next = findViewById<AppCompatButton>(R.id.nextButton)
         next.setOnClickListener{
-            d1 = d1.plusDays(1)
-            date.setText((d1.dayOfMonth).toString() + "." + (d1.monthValue).toString() + "." + d1.year.toString())
+            actualDate = actualDate.plusDays(1)
+            date.setText(actualDate.toString())
+            eventsSpinner()
         }
 
         val prev = findViewById<AppCompatButton>(R.id.prevButton)
         prev.setOnClickListener{
-            d1 = d1.minusDays(1)
-            date.setText((d1.dayOfMonth).toString() + "." + (d1.monthValue).toString() + "." + d1.year.toString())
+            actualDate = actualDate.minusDays(1)
+            date.setText(actualDate.toString())
+            eventsSpinner()
         }
 
-
         var fab = findViewById<FloatingActionButton>(R.id.fab)
-//        fab.setOnClickListener{
-//            Toast.makeText(this,"Add new action", Toast.LENGTH_LONG).show()
-//        }
-
-//        fab = findViewById(R.id.fab)
         registerForContextMenu(fab)
+
+    }
+
+    private fun eventsSpinner(){
+        val nameObserver = androidx.lifecycle.Observer<List<Category>> { newName ->
+            val arr = kotlin.collections.ArrayList<String>()
+            arr.add("all")
+            arr.add("active")
+            for (i in newName) {
+                arr.add(i.name)
+            }
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arr)
+
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            var bind = findViewById<Spinner>(R.id.eventsSpinner)
+            bind.adapter = arrayAdapter
+
+            bind.setSelection(arrayAdapter.getPosition("all"))
+
+            bind.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    if(p2==0){
+                        loadEvents()
+                    }else if(p2==1){
+                        loadActiveEvents()
+                    }else{
+                        println("arr get p2>>>>>>>>>>>>>>>>>>> " + arr.get(p2))
+                        loadEventsByCategory(arr.get(p2))
+                    }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    loadEvents()
+                }
+            }
+        }
+        categoryViewModel.categoriesLiveData.observe(this, nameObserver)
 
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu,menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun loadEvents(){
+        eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
+            words.let {
+                adapter.submitList(it)
+            }
+        }
+    }
+
+    private fun loadActiveEvents(){
+        eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
+            words.let {
+                var arr = ArrayList<Event>()
+                for(i in it){
+                    if(LocalTime.parse(i.timeFrom, DateTimeFormatter.ofPattern("HH:mm")).isAfter(
+                            LocalTime.now())){
+                        arr.add(i)
+                    }
+                }
+                adapter.submitList(arr)
+            }
+        }
+    }
+
+    private fun loadEventsByCategory(catName: String){
+        eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
+            words.let {
+                runBlocking {
+                    var arr = ArrayList<Event>()
+                    for(i in it){
+                        if(i.categoryId == categoryViewModel.getByName(catName)?.id){
+                            //це список категорій для різних юзерів
+                            arr.add(i)
+                            println("cat Name????????????????????? " + i.categoryId)
+                        }
+                    }
+                    adapter.submitList(arr)
+                }
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -135,17 +237,13 @@ class DayActivity : AppCompatActivity() {
         }
 
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        // you can set menu header with title icon etc
         menu.setHeaderTitle("Choose an action")
-        // add menu items
         menu.add(0, v.id, 0, "New Event")
         menu.add(0, v.id, 0, "New Task")
     }
@@ -159,5 +257,12 @@ class DayActivity : AppCompatActivity() {
             startActivity(intent)
         }
         return true
+    }
+
+    override fun onClickItem(event: Event) {
+        val intent = Intent(this, EventDetailsActivity::class.java).apply {
+            putExtra("event-detail", event)
+        }
+        startActivity(intent)
     }
 }

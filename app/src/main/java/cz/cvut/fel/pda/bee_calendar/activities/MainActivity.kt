@@ -1,7 +1,6 @@
 package cz.cvut.fel.pda.bee_calendar.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -10,7 +9,6 @@ import android.view.*
 import android.widget.*
 import android.widget.CalendarView.OnDateChangeListener
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -22,14 +20,10 @@ import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import cz.cvut.fel.pda.bee_calendar.CategoryListAdapter
-import cz.cvut.fel.pda.bee_calendar.EventListAdapter
+import cz.cvut.fel.pda.bee_calendar.utils.EventListAdapter
 import cz.cvut.fel.pda.bee_calendar.R
-import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.model.Event
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
     lateinit var dateTV: TextView
@@ -72,21 +66,19 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
             val intent = Intent(this, NotLoggedInActivity::class.java)
             startActivity(intent)
         }
-            user = eventViewModel.loggedUser!!
+        user = eventViewModel.loggedUser!!
         println("__________________________ " + user.id)
-        dateTV.setText((LocalDate.now().dayOfMonth).toString() + "." + (LocalDate.now().monthValue).toString() + "." + LocalDate.now().year);
+        dateTV.setText(LocalDate.now().toString());
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = EventListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        println("date actual>>>>>>>>>>>>>>>>>>>>>>>" + actualDate)
         eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
-            // Update the cached copy of the words in the adapter.
             words.let {
                 adapter.submitList(it)
             }
         }
-//        var d = LocalDate.now()
+
         calendarView
             .setOnDateChangeListener(
                 OnDateChangeListener { view, year, month, dayOfMonth ->

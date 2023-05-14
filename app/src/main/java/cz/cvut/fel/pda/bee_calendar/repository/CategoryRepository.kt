@@ -39,8 +39,8 @@ class CategoryRepository(
     }
 
     @WorkerThread
-    suspend fun getByName(name: String): Category? {
-        return categoryDao.getByName(name)
+    suspend fun getByName(userId: Int, name: String): Category? {
+        return categoryDao.getByName(userId, name)
     }
 
     @WorkerThread

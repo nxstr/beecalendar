@@ -27,7 +27,7 @@ class CategoryViewModel(
     }
 
     suspend fun getByName(name: String): Category? {
-        return categoryRepository.getByName(name)
+        return categoryRepository.getByName(loggedInUserId, name)
     }
 
     suspend fun getAll(): List<Category> {
