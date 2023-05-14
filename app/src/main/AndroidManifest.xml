@@ -49,6 +49,12 @@
         </activity>
 
         <activity
+            android:name="cz.cvut.fel.pda.bee_calendar.activities.EditEventActivity"
+            android:exported="false" >
+
+        </activity>
+
+        <activity
             android:name="cz.cvut.fel.pda.bee_calendar.activities.CategoryActivity"
             android:exported="false" >
 

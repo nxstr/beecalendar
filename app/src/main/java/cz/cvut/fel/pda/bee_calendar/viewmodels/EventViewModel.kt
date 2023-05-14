@@ -67,6 +67,10 @@ class EventViewModel(
         eventRepository.deleteAll()
     }
 
+    suspend fun getByName(name: String): List<Event>{
+        return eventRepository.getByName(name)
+    }
+
     class EventViewModelFactory(
         private val context: Context
     ) : ViewModelProvider.Factory {

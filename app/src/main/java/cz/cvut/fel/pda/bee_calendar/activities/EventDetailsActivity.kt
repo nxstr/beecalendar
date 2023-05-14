@@ -64,17 +64,23 @@ class EventDetailsActivity: AppCompatActivity() {
         if (item.itemId == R.id.navigation_item_delete) {
             Toast.makeText(this,
                 "Delete", Toast.LENGTH_SHORT).show()
-            /*
-            MAKE CLEVER DELETE FOR DIFFERENT REPEAT TYPES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             */
-            event.id?.let { eventViewModel.deleteEvent(it) }
+            runBlocking {
+                val arr = eventViewModel.getByName(event.name)
+                for(i in arr){
+                    i.id?.let { eventViewModel.deleteEvent(it) }
+                }
+            }
             finish()
         } else if (item.itemId == android.R.id.home) {
             finish()
         }else if (item.itemId == R.id.navigation_item_edit) {
             Toast.makeText(this,
                 "Edit", Toast.LENGTH_SHORT).show()
-            finish()
+            val intent = Intent(this, EditEventActivity::class.java).apply {
+                putExtra("event-detail", event)
+            }
+            startActivity(intent)
+//            finish()
         }
         return super.onOptionsItemSelected(item)
     }
