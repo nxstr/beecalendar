@@ -41,7 +41,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val hashMap = intent.getSerializableExtra(EXTRA_MESSAGE) as ArrayList<String>
         val todo = hashMap.get(0)
         val notifId = hashMap.get(1).toInt()
-        val title = "Bee Calendar"
+        val title = "Bee Calendar " + hashMap.get(2)
 
         println("here------------------------ ")
 
@@ -55,12 +55,13 @@ class AlarmReceiver : BroadcastReceiver() {
      * */
 
 
-    fun setReminder(context: Context, dueDate: Long, message: String) {
+    fun setReminder(context: Context, dueDate: Long, message: String, name: String) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         val map = ArrayList<String>()
         map.add(message)
         map.add(dueDate.toInt().toString())
+        map.add(name)
         intent.putExtra(EXTRA_MESSAGE, map)
 
         val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

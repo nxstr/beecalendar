@@ -23,9 +23,12 @@ import com.google.android.material.navigation.NavigationView
 import cz.cvut.fel.pda.bee_calendar.utils.EventListAdapter
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.model.Event
+import cz.cvut.fel.pda.bee_calendar.model.Task
+import cz.cvut.fel.pda.bee_calendar.utils.TaskListAdapter
+import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 import java.time.LocalDate
 
-class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
+class MainActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdapter.Listener{
     lateinit var dateTV: TextView
     lateinit var ns: TextView
     lateinit var em: TextView
@@ -42,6 +45,9 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
 
     private val eventViewModel: EventViewModel by viewModels {
         EventViewModel.EventViewModelFactory(this)
+    }
+    private val taskViewModel: TaskViewModel by viewModels {
+        TaskViewModel.TaskViewModelFactory(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -62,22 +68,31 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
         sp = getSharedPreferences("logged-in-user", MODE_PRIVATE)
 
         if(eventViewModel.loggedUser==null){
-            println("why is it null??????????????????????????")
             val intent = Intent(this, NotLoggedInActivity::class.java)
             startActivity(intent)
         }
         user = eventViewModel.loggedUser!!
-        println("__________________________ " + user.id)
         dateTV.setText(LocalDate.now().toString());
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = EventListAdapter(this)
+        val adapter1 = TaskListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
-            words.let {
-                adapter.submitList(it)
-            }
+        loadEvents(adapter)
+
+        val schedule = findViewById<Button>(R.id.schedule)
+        schedule.setOnClickListener {
+            recyclerView.adapter = adapter
+            loadEvents(adapter)
         }
+
+
+        val todo_list = findViewById<Button>(R.id.todo_list)
+        todo_list.setOnClickListener {
+            recyclerView.adapter = adapter1
+            loadTasks(adapter1)
+        }
+
 
         calendarView
             .setOnDateChangeListener(
@@ -88,11 +103,10 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
                     val Date = (dayOfMonth.toString() + "."
                             + (month + 1) + "." + year)
                     dateTV.setText(Date)
-                    eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
-                        // Update the cached copy of the words in the adapter.
-                        words.let {
-                            adapter.submitList(it)
-                        }
+                    if(recyclerView.adapter==adapter) {
+                        loadEvents(adapter)
+                    }else if(recyclerView.adapter==adapter1){
+                        loadTasks(adapter1)
                     }
 //                    eventViewModel.getEventsByDate(d)
                 })
@@ -104,6 +118,24 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
 
 
 
+
+    }
+
+
+    private fun loadEvents(adapter: EventListAdapter){
+        eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
+            words.let {
+                adapter.submitList(it)
+            }
+        }
+    }
+
+    private fun loadTasks(adapter: TaskListAdapter){
+        taskViewModel.getTasksByDate(actualDate).observe(this) { words ->
+            words.let {
+                adapter.submitList(it)
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -201,6 +233,18 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener{
             putExtra("event-detail", event)
         }
         startActivity(intent)
+    }
+
+    override fun onClickTask(task: Task) {
+        val intent = Intent(this, TaskDetailsActivity::class.java).apply {
+            putExtra("task-detail", task)
+        }
+        startActivity(intent)
+    }
+
+    override fun onClickCheckbox(task: Task) {
+        task.isActive = !task.isActive
+        taskViewModel.updateTask(task)
     }
 
 

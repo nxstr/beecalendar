@@ -24,4 +24,4 @@ data class Task(
     var priority: PriorityEnum
 
 
-) : Action()
+) : Action(), java.io.Serializable

@@ -13,6 +13,7 @@ import cz.cvut.fel.pda.bee_calendar.databinding.ActivityCategoryBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
+import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 
 class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
     private lateinit var binding: ActivityCategoryBinding
@@ -21,6 +22,10 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
 
     private val categoryViewModel: CategoryViewModel by viewModels {
         CategoryViewModel.CategoryViewModelFactory(this)
+    }
+
+    private val taskViewModel: TaskViewModel by viewModels {
+        TaskViewModel.TaskViewModelFactory(this)
     }
 
     private val eventViewModel: EventViewModel by viewModels {
@@ -53,10 +58,6 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
                     }
                 }
                 adapter.submitList(arr)
-//
-//                for(i in arr){
-//                    println("arr item ================" + i.name)
-//                }
             }
         }
 
@@ -86,6 +87,16 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
                     for(i in it){
                         i.categoryId = default as Int
                         eventViewModel.updateEvent(i)
+                    }
+                }
+
+            }
+
+            taskViewModel.getTasksByCatFlow(catId).observe(this){ events ->
+                events.let {
+                    for(i in it){
+                        i.categoryId = default as Int
+                        taskViewModel.updateTask(i)
                     }
                 }
 

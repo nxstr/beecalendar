@@ -29,15 +29,18 @@ import com.google.android.material.navigation.NavigationView
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityDayBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.model.Event
+import cz.cvut.fel.pda.bee_calendar.model.Task
 import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
 import cz.cvut.fel.pda.bee_calendar.utils.EventListAdapter
+import cz.cvut.fel.pda.bee_calendar.utils.TaskListAdapter
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
+import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
+class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdapter.Listener {
 
     lateinit var date: TextView
     lateinit var bottomNav : BottomNavigationView
@@ -45,9 +48,14 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
     private var actualDate: LocalDate = LocalDate.now()
     private lateinit var binding: ActivityDayBinding
     private lateinit var adapter: EventListAdapter
+    private lateinit var adapterTask: TaskListAdapter
 
     private val eventViewModel: EventViewModel by viewModels {
         EventViewModel.EventViewModelFactory(this)
+    }
+
+    private val taskViewModel: TaskViewModel by viewModels {
+        TaskViewModel.TaskViewModelFactory(this)
     }
 
     private val categoryViewModel: CategoryViewModel by viewModels {
@@ -87,11 +95,19 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        val recyclerView2 = findViewById<RecyclerView>(R.id.recyclerview2)
+        adapterTask = TaskListAdapter(this)
+        recyclerView2.adapter = adapterTask
+        recyclerView2.layoutManager = LinearLayoutManager(this)
+
+        tasksSpinner()
+
         val next = findViewById<AppCompatButton>(R.id.nextButton)
         next.setOnClickListener{
             actualDate = actualDate.plusDays(1)
             date.setText(actualDate.toString())
             eventsSpinner()
+            tasksSpinner()
         }
 
         val prev = findViewById<AppCompatButton>(R.id.prevButton)
@@ -99,10 +115,52 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
             actualDate = actualDate.minusDays(1)
             date.setText(actualDate.toString())
             eventsSpinner()
+            tasksSpinner()
         }
+
+
+
 
         var fab = findViewById<FloatingActionButton>(R.id.fab)
         registerForContextMenu(fab)
+
+    }
+
+    private fun tasksSpinner(){
+        val nameObserver = androidx.lifecycle.Observer<List<Category>> { newName ->
+            val arr = kotlin.collections.ArrayList<String>()
+            arr.add("all")
+            arr.add("active")
+            for (i in newName) {
+                arr.add(i.name)
+            }
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arr)
+
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            var bind = findViewById<Spinner>(R.id.tasksSpinner)
+            bind.adapter = arrayAdapter
+
+            bind.setSelection(arrayAdapter.getPosition("all"))
+
+            bind.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    if(p2==0){
+                        loadTasks()
+                    }else if(p2==1){
+                        loadActiveTasks()
+                    }else{
+                        println("arr get p2>>>>>>>>>>>>>>>>>>> " + arr.get(p2))
+                        loadTasksByCategory(arr.get(p2))
+                    }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    loadTasks()
+                }
+            }
+        }
+        categoryViewModel.categoriesLiveData.observe(this, nameObserver)
 
     }
 
@@ -157,6 +215,28 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
         }
     }
 
+    private fun loadTasks(){
+        taskViewModel.getTasksByDate(actualDate).observe(this) { words ->
+            words.let {
+                adapterTask.submitList(it)
+            }
+        }
+    }
+
+    private fun loadActiveTasks(){
+        taskViewModel.getTasksByDate(actualDate).observe(this) { words ->
+            words.let {
+                var arr = ArrayList<Task>()
+                for(i in it){
+                    if(i.isActive){
+                        arr.add(i)
+                    }
+                }
+                adapterTask.submitList(arr)
+            }
+        }
+    }
+
     private fun loadActiveEvents(){
         eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
             words.let {
@@ -168,6 +248,24 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
                     }
                 }
                 adapter.submitList(arr)
+            }
+        }
+    }
+
+    private fun loadTasksByCategory(catName: String){
+        taskViewModel.getTasksByDate(actualDate).observe(this) { words ->
+            words.let {
+                runBlocking {
+                    var arr = ArrayList<Task>()
+                    for(i in it){
+                        if(i.categoryId == categoryViewModel.getByName(catName)?.id){
+                            //це список категорій для різних юзерів
+                            arr.add(i)
+                            println("cat Name????????????????????? " + i.categoryId)
+                        }
+                    }
+                    adapterTask.submitList(arr)
+                }
             }
         }
     }
@@ -262,6 +360,18 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener {
     override fun onClickItem(event: Event) {
         val intent = Intent(this, EventDetailsActivity::class.java).apply {
             putExtra("event-detail", event)
+        }
+        startActivity(intent)
+    }
+
+    override fun onClickCheckbox(task: Task) {
+        task.isActive = !task.isActive
+        taskViewModel.updateTask(task)
+    }
+
+    override fun onClickTask(task: Task) {
+        val intent = Intent(this, TaskDetailsActivity::class.java).apply {
+            putExtra("task-detail", task)
         }
         startActivity(intent)
     }

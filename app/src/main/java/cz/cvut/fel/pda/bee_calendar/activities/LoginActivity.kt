@@ -58,29 +58,6 @@ class LoginActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-//    private fun registrationLink() {
-//        val clickableSpan = object : ClickableSpan() {
-//            override fun onClick(textView: View) {
-//                startActivity(
-//                    Intent(this@LoginActivity, RegistrationActivity::class.java)
-//                )
-//            }
-//            override fun updateDrawState(ds: TextPaint) {
-//                super.updateDrawState(ds)
-//                ds.isUnderlineText = false
-//            }
-//        }
-//
-//        val spannableString = SpannableString("Registration")
-//        spannableString.setSpan(clickableSpan, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-//        binding.loginLinkToSingUp.apply {
-//            text = spannableString
-//            movementMethod = LinkMovementMethod.getInstance()
-//            highlightColor = Color.TRANSPARENT
-//            setTextColor(Color.BLACK)
-//        }
-//    }
-
     private fun registrationLink(){
         val registrationButton = binding.registrationButton
         registrationButton.setOnClickListener {

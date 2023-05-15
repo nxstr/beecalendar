@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import cz.cvut.fel.pda.bee_calendar.MainApp
 import cz.cvut.fel.pda.bee_calendar.dao.TaskDao
+import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.Task
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.repository.CategoryRepository
@@ -43,6 +44,14 @@ class TaskViewModel (
         return taskRepository.getAllByDate(loggedInUserId, date.toString()).asLiveData()
     }
 
+    fun getTasksByCatFlow(catId: Int): LiveData<List<Task>>{
+        return taskRepository.getAllByCat(loggedInUserId, catId).asLiveData()
+    }
+
+    suspend fun getByName(name: String): List<Task>{
+        return taskRepository.getByName(name)
+    }
+
     fun insertTask(newTask: Task) = viewModelScope.launch {
         taskRepository.insert(newTask)
     }
@@ -53,6 +62,10 @@ class TaskViewModel (
 
     fun deleteTask(id: Int) = viewModelScope.launch {
         taskRepository.delete(id)
+    }
+
+    fun deleteAll() = viewModelScope.launch {
+        taskRepository.deleteAll()
     }
 
     class TaskViewModelFactory(

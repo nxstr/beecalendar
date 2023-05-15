@@ -28,6 +28,20 @@ class EventActivityUtil {
         mTimePicker.show()
     }
 
+    public fun timeTextView(time: TextView, context: Context) {
+        val mTimePicker: TimePickerDialog
+        val mcurrentTime = Calendar.getInstance()
+        val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
+        val minute = mcurrentTime.get(Calendar.MINUTE)
+
+        mTimePicker = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
+            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+                time.setText(LocalTime.of(hourOfDay, minute).format(DateTimeFormatter.ofPattern("HH:mm")))
+            }
+        }, hour, minute, true)
+        mTimePicker.show()
+    }
+
     public fun datePicker(sbd: TextView, context: Context){
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)

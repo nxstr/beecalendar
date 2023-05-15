@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.Task
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -27,6 +28,9 @@ interface TaskDao {
 
     @Query("SELECT * FROM Tasks WHERE categoryId = :categoryId")
     suspend fun getAllTasksByCategory(categoryId: Int): List<Task>
+
+    @Query("SELECT * FROM Tasks WHERE userId = :userId AND categoryId = :categoryId")
+    fun getAllTasksByCategoryFlow(userId: Int, categoryId: Int): Flow<List<Task>>
 
     @Insert
     suspend fun insert(vararg task: Task)

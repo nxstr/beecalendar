@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cz.cvut.fel.pda.bee_calendar.activities.NewEventActivity"
+    tools:context="cz.cvut.fel.pda.bee_calendar.activities.TaskDetailsActivity"
     android:background="@color/yellow_200"
     >
 
@@ -97,12 +97,13 @@
                     />
 
                 <TextView
+                    android:id="@+id/priority"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
-                    android:text="priority"
+
                     android:layout_marginEnd="0dp"
                     />
 
@@ -128,12 +129,13 @@
                     />
 
                 <TextView
+                    android:id="@+id/categoryName"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
-                    android:text="category"
+
                     android:layout_marginEnd="0dp"
                     />
 
@@ -159,12 +161,12 @@
                     />
 
                 <TextView
+                    android:id="@+id/remind"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
-                    android:text="dateTime"
                     android:layout_marginEnd="0dp"
                     />
             </LinearLayout>
@@ -185,12 +187,13 @@
                     />
 
                 <TextView
+                    android:id="@+id/state"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
-                    android:text="state"
+
                     android:layout_marginEnd="0dp"
                     />
             </LinearLayout>
@@ -216,7 +219,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top"
-                    android:text="description"
                     android:textSize="25dp"
                     android:nestedScrollingEnabled="false"
                     />

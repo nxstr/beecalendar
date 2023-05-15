@@ -144,6 +144,7 @@ class NewEventActivity : AppCompatActivity() {
         return exists
     }
 
+
     private fun validateDateTime(): Boolean{
         if(binding.submitDate.text.toString()!="submit date"){
             submitDatePicked = LocalDate.parse(binding.submitDate.text, DateTimeFormatter.ISO_DATE)
@@ -197,12 +198,19 @@ class NewEventActivity : AppCompatActivity() {
                 return false
             }
         }
+
+        if(!binding.remindTime.text.equals("time") && binding.remindDate.text.toString()=="date"){
+            Toast.makeText(this,
+                "Remind must have date, not only time!", Toast.LENGTH_SHORT).show()
+            return false
+        }
         return true
     }
 
 
     private fun setResultForUpdate(event: Event){
         if(repeatE==RepeatEnum.ONCE && event.repeatEnum==repeatE){
+            deleteReminder(event)
             event.name = binding.eventName.text.toString()
             event.location = binding.location.text.toString()
             event.notes = binding.notes.text.toString()
@@ -217,6 +225,9 @@ class NewEventActivity : AppCompatActivity() {
                 event.remind = remindDatePicked.toString() + "/" + binding.remindTime.text.toString()
             }
             eventViewModel.updateEvent(event)
+            setReminder(event)
+
+
         }else if(repeatE!=RepeatEnum.ONCE && repeatE==event.repeatEnum){
             if(submitDatePicked.toString()==event.date && repeatDatePicked.toString() == event.repeatTo){
                 //якщо не змінилась основна дата і не змінився репіт взагалі
@@ -226,6 +237,7 @@ class NewEventActivity : AppCompatActivity() {
                     // або якщо ремайнду не існувало і не існує
                     runBlocking {
                         for(ev in eventViewModel.getByName(event.name)){
+                            deleteReminder(ev)
                             ev.name = binding.eventName.text.toString()
                             ev.location = binding.location.text.toString()
                             ev.notes = binding.notes.text.toString()
@@ -233,6 +245,7 @@ class NewEventActivity : AppCompatActivity() {
                             ev.timeTo = binding.timeTo.text.toString()
                             ev.categoryId = catId
                             eventViewModel.updateEvent(ev)
+                            setReminder(ev)
                         }
                     }
                 }else{
@@ -240,6 +253,7 @@ class NewEventActivity : AppCompatActivity() {
                         var arr = eventViewModel.getByName(event.name).toMutableList()
                         for (ev in arr) {
                             ev.id?.let { eventViewModel.deleteEvent(it) }
+                            deleteReminder(ev)
                         }
                         setResult()
                     }
@@ -249,6 +263,7 @@ class NewEventActivity : AppCompatActivity() {
                     var arr = eventViewModel.getByName(event.name).toMutableList()
                     for (ev in arr) {
                         ev.id?.let { eventViewModel.deleteEvent(it) }
+                        deleteReminder(ev)
                     }
                     setResult()
                 }
@@ -258,6 +273,7 @@ class NewEventActivity : AppCompatActivity() {
                 var arr = eventViewModel.getByName(event.name).toMutableList()
                 for (ev in arr) {
                     ev.id?.let { eventViewModel.deleteEvent(it) }
+                    deleteReminder(ev)
                 }
                 setResult()
             }
@@ -403,7 +419,7 @@ class NewEventActivity : AppCompatActivity() {
         if(remindDate!=null){
             rem = remindDate.toString() + "/" + binding.remindTime.text.toString()
             alarmReceiver.setReminder(this, LocalDateTime.parse(remindDate.toString()+" "+binding.remindTime.text.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
-                ZoneId.systemDefault()).toInstant().toEpochMilli()+1, binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString())
+                ZoneId.systemDefault()).toInstant().toEpochMilli()+6, binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString(), "event")
         }
         eventViewModel.insertEvent(
             cz.cvut.fel.pda.bee_calendar.model.Event(
@@ -422,6 +438,33 @@ class NewEventActivity : AppCompatActivity() {
         )
 
         alarmReceiver.setReminder(this, LocalDateTime.parse(date.toString()+" "+binding.timeFrom.text.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
-            ZoneId.systemDefault()).toInstant().toEpochMilli(), binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString())
+            ZoneId.systemDefault()).toInstant().toEpochMilli()+5, binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString(), "event")
+    }
+
+    private fun deleteReminder(event: Event){
+        alarmReceiver.cancelReminder(this, LocalDateTime.parse(event.date+" "+event.timeFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
+            ZoneId.systemDefault()).toInstant().toEpochMilli()+5)
+
+        if(event.remind!=""){
+            val remDate = event.remind.split("/").get(0)
+            val remTime = event.remind.split("/").get(1)
+            alarmReceiver.cancelReminder(this, LocalDateTime.parse(remDate+" "+remTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
+                ZoneId.systemDefault()).toInstant().toEpochMilli()+6)
+
+        }
+
+    }
+
+    private fun setReminder(event: Event){
+        alarmReceiver.setReminder(this, LocalDateTime.parse(binding.submitDate.text.toString()+" "+binding.timeFrom.text.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
+            ZoneId.systemDefault()).toInstant().toEpochMilli()+5, binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString(), "event")
+
+        if(remindDatePicked!=null){
+            val remDate = remindDatePicked.toString()
+            val remTime = binding.remindTime.text.toString()
+            alarmReceiver.setReminder(this, LocalDateTime.parse(remDate+" "+remTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
+                ZoneId.systemDefault()).toInstant().toEpochMilli()+6, binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString(), "event")
+        }
+
     }
 }

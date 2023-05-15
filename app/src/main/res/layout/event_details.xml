@@ -128,7 +128,6 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
                     android:ems="10"
-                    android:text="location"
                     android:textSize="25dp" />
 
 
@@ -157,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
-                    android:text="category"
+
                     android:layout_marginEnd="0dp"
                     />
 
@@ -187,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
-                    android:text="repeat"
+
                     android:layout_marginEnd="0dp"
                     />
             </LinearLayout>
@@ -215,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
-                    android:text="dateTime"
+
                     android:layout_marginEnd="0dp"
                     />
             </LinearLayout>
@@ -241,7 +240,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top"
-                    android:text="description"
                     android:textSize="25dp"
                     android:nestedScrollingEnabled="false"
                     />

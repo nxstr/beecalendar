@@ -60,23 +60,14 @@
             android:selectAllOnFocus="true"
             android:textSize="30dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date:"
-            android:layout_marginStart="15dp"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            >
+            android:layout_marginBottom="15dp">
 
 
-            <EditText
+            <TextView
                 android:id="@+id/submitDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -85,14 +76,32 @@
                 android:layout_weight="1"
                 android:background="@color/yellow_500"
                 android:ems="10"
-                android:hint="submit date"
+                android:text="deadline date"
                 android:inputType="date"
                 android:padding="0dp"
                 android:paddingStart="5dp"
                 android:selectAllOnFocus="true"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:textAlignment="center"/>
 
-            <EditText
+            <android.widget.Button
+                android:id="@+id/submitDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shapes"
+                android:text="Pick"
+                android:layout_marginEnd="15dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="15dp">
+
+
+            <TextView
                 android:id="@+id/submitTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -101,12 +110,21 @@
                 android:layout_weight="1"
                 android:background="@color/yellow_500"
                 android:ems="10"
-                android:hint="submit time"
-                android:inputType="time"
+                android:text="deadline time"
+                android:inputType="date"
                 android:padding="0dp"
                 android:paddingStart="5dp"
                 android:selectAllOnFocus="true"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:textAlignment="center"/>
+
+            <android.widget.Button
+                android:id="@+id/submitTimeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shapes"
+                android:text="Pick"
+                android:layout_marginEnd="15dp"/>
 
         </LinearLayout>
 
@@ -172,6 +190,35 @@
                 />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="15dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:text="state: "
+                android:textSize="30dp" />
+
+            <CheckBox
+                android:id="@+id/task_checkbox"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/black"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:text="completed"
+                android:textSize="30dp" />
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -187,7 +234,7 @@
             android:orientation="horizontal">
 
 
-            <EditText
+            <TextView
                 android:id="@+id/remindDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -196,28 +243,28 @@
                 android:layout_weight="1"
                 android:background="@color/yellow_500"
                 android:ems="10"
-                android:hint="remind date"
+                android:text="date"
                 android:inputType="date"
                 android:padding="0dp"
                 android:paddingStart="5dp"
                 android:selectAllOnFocus="true"
                 android:textSize="30dp" />
 
-            <EditText
+            <android.widget.Button
+                android:id="@+id/remindDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shapes"
+                android:text="Pick"
+                android:layout_marginEnd="15dp"/>
+
+            <android.widget.Button
                 android:id="@+id/remindTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_weight="1"
-                android:background="@color/yellow_500"
-                android:ems="10"
-                android:hint="remind time"
-                android:inputType="time"
-                android:padding="0dp"
-                android:paddingStart="5dp"
-                android:selectAllOnFocus="true"
-                android:textSize="30dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shapes"
+                android:text="time"
+                android:layout_marginEnd="15dp"/>
 
         </LinearLayout>
 
