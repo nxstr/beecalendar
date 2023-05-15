@@ -8,11 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.liveData
+import cz.cvut.fel.pda.bee_calendar.utils.AlarmReceiver
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityNewEventBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
@@ -21,15 +17,10 @@ import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
 import cz.cvut.fel.pda.bee_calendar.utils.EventActivityUtil
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
-import java.time.LocalTime
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.*
-import kotlin.collections.ArrayList
 
 class NewEventActivity : AppCompatActivity() {
 
@@ -38,6 +29,7 @@ class NewEventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewEventBinding
     private var event : Event? = null
     private var repeatE: RepeatEnum = RepeatEnum.ONCE
+    private lateinit var alarmReceiver: AlarmReceiver
 
     private var submitDatePicked: LocalDate? = null
     private var remindDatePicked: LocalDate? = null
@@ -58,6 +50,7 @@ class NewEventActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        alarmReceiver = AlarmReceiver()
 
         if(intent.extras!=null){
             event = intent.extras?.get("event-detail") as Event
@@ -86,6 +79,7 @@ class NewEventActivity : AppCompatActivity() {
             eventUtil.times(binding.remindTime, this)
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.action_menu, menu)
@@ -405,9 +399,11 @@ class NewEventActivity : AppCompatActivity() {
     }
 
     private fun insertEvent(date: LocalDate, remindDate: LocalDate?, repeatTillDate: LocalDate){
-         var rem = ""
+        var rem = ""
         if(remindDate!=null){
             rem = remindDate.toString() + "/" + binding.remindTime.text.toString()
+            alarmReceiver.setReminder(this, LocalDateTime.parse(remindDate.toString()+" "+binding.remindTime.text.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
+                ZoneId.systemDefault()).toInstant().toEpochMilli()+1, binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString())
         }
         eventViewModel.insertEvent(
             cz.cvut.fel.pda.bee_calendar.model.Event(
@@ -424,5 +420,8 @@ class NewEventActivity : AppCompatActivity() {
                 repeatTo = repeatTillDate.toString()
             )
         )
+
+        alarmReceiver.setReminder(this, LocalDateTime.parse(date.toString()+" "+binding.timeFrom.text.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atZone(
+            ZoneId.systemDefault()).toInstant().toEpochMilli(), binding.timeFrom.text.toString()+ " - " + binding.timeTo.text.toString() +" "+binding.eventName.text.toString())
     }
 }
