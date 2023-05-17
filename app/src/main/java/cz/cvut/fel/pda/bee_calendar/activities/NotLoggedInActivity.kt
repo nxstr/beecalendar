@@ -46,6 +46,7 @@ class NotLoggedInActivity : AppCompatActivity(){
         setContentView(R.layout.left_drawer_unlogged)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        setTitle("CALENDAR")
         //home navigation
 //        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -103,7 +104,7 @@ class NotLoggedInActivity : AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.navigation_house -> {
             // User chose the "Print" item
-            Toast.makeText(this,"Search action", Toast.LENGTH_LONG).show()
+            Toast.makeText(this,"You are not logged in", Toast.LENGTH_LONG).show()
             true
         }
         android.R.id.home ->{
@@ -122,6 +123,7 @@ class NotLoggedInActivity : AppCompatActivity(){
         R.id.navigation_notifications ->{
 //            val intent = Intent(this, DayActivity::class.java)
 //            startActivity(intent)
+            Toast.makeText(this,"You are not logged in",Toast.LENGTH_LONG).show()
             true
         }
 

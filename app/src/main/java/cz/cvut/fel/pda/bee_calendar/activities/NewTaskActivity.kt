@@ -91,7 +91,7 @@ class NewTaskActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.navigation_save) {
-            if(validateName()) {
+//            if(validateName()) {
                 if(validateDateTime()) {
                     Toast.makeText(
                         this,
@@ -105,10 +105,10 @@ class NewTaskActivity : AppCompatActivity() {
                         finish()
                     }
                 }
-            }else{
-                Toast.makeText(this,
-                    "Event name must be unique!", Toast.LENGTH_SHORT).show()
-            }
+//            }else{
+//                Toast.makeText(this,
+//                    "Event name must be unique!", Toast.LENGTH_SHORT).show()
+//            }
         } else if (item.itemId == android.R.id.home) {
             finish()
         }

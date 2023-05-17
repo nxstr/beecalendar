@@ -7,47 +7,37 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.*
-import android.widget.CalendarView.OnDateChangeListener
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import cz.cvut.fel.pda.bee_calendar.utils.EventListAdapter
+import cz.cvut.fel.pda.bee_calendar.fragments.CalendarFragment
+import cz.cvut.fel.pda.bee_calendar.fragments.DayFragment
 import cz.cvut.fel.pda.bee_calendar.R
-import cz.cvut.fel.pda.bee_calendar.model.Event
-import cz.cvut.fel.pda.bee_calendar.model.Task
-import cz.cvut.fel.pda.bee_calendar.utils.TaskListAdapter
+import cz.cvut.fel.pda.bee_calendar.fragments.SearchFragment
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 import java.time.LocalDate
 
-class MainActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdapter.Listener{
-    lateinit var dateTV: TextView
+class MainActivity : AppCompatActivity(){
     lateinit var ns: TextView
     lateinit var em: TextView
-    lateinit var calendarView: CalendarView
-    lateinit var cardView2: LinearLayout
     lateinit var bottomNav : BottomNavigationView
     lateinit var fab: FloatingActionButton
     lateinit var drawer: DrawerLayout
     private lateinit var sp: SharedPreferences
-    private lateinit var editLauncher: ActivityResultLauncher<Intent>
-    private var actualDate: LocalDate = LocalDate.now()
+    private val currentInstance: Fragment? = supportFragmentManager.findFragmentById(R.id.main_fr)
 
     private lateinit var user: User
 
     private val eventViewModel: EventViewModel by viewModels {
         EventViewModel.EventViewModelFactory(this)
-    }
-    private val taskViewModel: TaskViewModel by viewModels {
-        TaskViewModel.TaskViewModelFactory(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -58,12 +48,13 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAda
         setContentView(R.layout.left_drawer)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        val transaction = this.supportFragmentManager.beginTransaction()
+
+        transaction.replace(R.id.main_fr, CalendarFragment())
+        transaction.commit()
+
         drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-        dateTV = findViewById(R.id.idTVDate)
-        calendarView = findViewById(R.id.calendarView)
-        cardView2 = findViewById(R.id.cardView2)
 
         sp = getSharedPreferences("logged-in-user", MODE_PRIVATE)
 
@@ -72,71 +63,13 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAda
             startActivity(intent)
         }
         user = eventViewModel.loggedUser!!
-        dateTV.setText(LocalDate.now().toString());
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = EventListAdapter(this)
-        val adapter1 = TaskListAdapter(this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        loadEvents(adapter)
-
-        val schedule = findViewById<Button>(R.id.schedule)
-        schedule.setOnClickListener {
-            recyclerView.adapter = adapter
-            loadEvents(adapter)
-        }
-
-
-        val todo_list = findViewById<Button>(R.id.todo_list)
-        todo_list.setOnClickListener {
-            recyclerView.adapter = adapter1
-            loadTasks(adapter1)
-        }
-
-
-        calendarView
-            .setOnDateChangeListener(
-                OnDateChangeListener { view, year, month, dayOfMonth ->
-
-                    actualDate = LocalDate.of(year, month+1, dayOfMonth)
-
-                    val Date = (dayOfMonth.toString() + "."
-                            + (month + 1) + "." + year)
-                    dateTV.setText(Date)
-                    if(recyclerView.adapter==adapter) {
-                        loadEvents(adapter)
-                    }else if(recyclerView.adapter==adapter1){
-                        loadTasks(adapter1)
-                    }
-//                    eventViewModel.getEventsByDate(d)
-                })
-
 
         fab = findViewById(R.id.fab)
         registerForContextMenu(fab)
 
 
-
-
-
     }
 
-
-    private fun loadEvents(adapter: EventListAdapter){
-        eventViewModel.getEventsByDate(actualDate).observe(this) { words ->
-            words.let {
-                adapter.submitList(it)
-            }
-        }
-    }
-
-    private fun loadTasks(adapter: TaskListAdapter){
-        taskViewModel.getTasksByDate(actualDate).observe(this) { words ->
-            words.let {
-                adapter.submitList(it)
-            }
-        }
-    }
 
     @SuppressLint("SetTextI18n")
     private fun loadUser(user: User) {
@@ -154,7 +87,11 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAda
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.navigation_house -> {
-                Toast.makeText(this, "Search action", Toast.LENGTH_LONG).show()
+                if(currentInstance !is SearchFragment) {
+                    val transaction = this.supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.main_fr, SearchFragment())
+                    transaction.commit()
+                }
                 true
             }
             android.R.id.home -> {
@@ -193,8 +130,20 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAda
             }
 
             R.id.navigation_notifications -> {
-                val intent = Intent(this, DayActivity::class.java)
-                startActivity(intent)
+                val fragmentInstance = supportFragmentManager.findFragmentById(R.id.main_fr)
+
+                if(fragmentInstance !is SearchFragment) {
+                    val transaction = this.supportFragmentManager.beginTransaction()
+
+
+                    if (fragmentInstance is DayFragment) {
+                        transaction.replace(R.id.main_fr, CalendarFragment())
+
+                    } else if (fragmentInstance is CalendarFragment) {
+                        transaction.replace(R.id.main_fr, DayFragment())
+                    }
+                    transaction.commit()
+                }
                 true
             }
 
@@ -226,26 +175,4 @@ class MainActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAda
         }
         return true
     }
-
-    override fun onClickItem(event: Event) {
-        println("clicked =================== " + event.name)
-        val intent = Intent(this, EventDetailsActivity::class.java).apply {
-            putExtra("event-detail", event)
-        }
-        startActivity(intent)
-    }
-
-    override fun onClickTask(task: Task) {
-        val intent = Intent(this, TaskDetailsActivity::class.java).apply {
-            putExtra("task-detail", task)
-        }
-        startActivity(intent)
-    }
-
-    override fun onClickCheckbox(task: Task) {
-        task.isActive = !task.isActive
-        taskViewModel.updateTask(task)
-    }
-
-
 }

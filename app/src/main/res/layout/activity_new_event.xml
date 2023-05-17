@@ -359,7 +359,7 @@
                 android:baselineAligned="false"
                 android:ems="10"
                 android:gravity="top"
-                android:hint="notes"
+                android:text="notes"
                 android:textSize="30dp"
                 android:paddingStart="5dp"
                 android:inputType="text|textMultiLine"

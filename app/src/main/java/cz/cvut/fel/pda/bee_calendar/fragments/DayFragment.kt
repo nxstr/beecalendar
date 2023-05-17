@@ -1,108 +1,86 @@
-package cz.cvut.fel.pda.bee_calendar.activities
+package cz.cvut.fel.pda.bee_calendar.fragments
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.view.*
-import android.view.ContextMenu.ContextMenuInfo
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import cz.cvut.fel.pda.bee_calendar.R
-import cz.cvut.fel.pda.bee_calendar.activities.*
-import cz.cvut.fel.pda.bee_calendar.model.User
-import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
-import cz.cvut.fel.pda.bee_calendar.databinding.ActivityDayBinding
+import cz.cvut.fel.pda.bee_calendar.activities.EventDetailsActivity
+import cz.cvut.fel.pda.bee_calendar.activities.MainActivity
+import cz.cvut.fel.pda.bee_calendar.activities.TaskDetailsActivity
+import cz.cvut.fel.pda.bee_calendar.databinding.FragmentDayBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.Task
-import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
 import cz.cvut.fel.pda.bee_calendar.utils.EventListAdapter
 import cz.cvut.fel.pda.bee_calendar.utils.TaskListAdapter
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
+import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdapter.Listener {
+class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listener {
 
+    private lateinit var binding: FragmentDayBinding
     lateinit var date: TextView
-    lateinit var bottomNav : BottomNavigationView
-    lateinit var toolbar_value : TextView
     private var actualDate: LocalDate = LocalDate.now()
-    private lateinit var binding: ActivityDayBinding
     private lateinit var adapter: EventListAdapter
     private lateinit var adapterTask: TaskListAdapter
 
-    private val eventViewModel: EventViewModel by viewModels {
-        EventViewModel.EventViewModelFactory(this)
+    private val eventViewModel: EventViewModel by activityViewModels {
+        EventViewModel.EventViewModelFactory(requireContext())
+    }
+    private val taskViewModel: TaskViewModel by activityViewModels {
+        TaskViewModel.TaskViewModelFactory(requireContext())
     }
 
-    private val taskViewModel: TaskViewModel by viewModels {
-        TaskViewModel.TaskViewModelFactory(this)
+    private val categoryViewModel: CategoryViewModel by activityViewModels {
+        CategoryViewModel.CategoryViewModelFactory(requireContext())
     }
 
-    private val categoryViewModel: CategoryViewModel by viewModels {
-        CategoryViewModel.CategoryViewModelFactory(this)
-    }
 
-    private lateinit var sp: SharedPreferences
-
-    private lateinit var user: User
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("MissingInflatedId", "SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDayBinding.inflate(layoutInflater)
-        setContentView(R.layout.left_drawer_day)
-        setSupportActionBar(findViewById(R.id.toolbar))
-        //home navigation
+        (activity as MainActivity).supportActionBar?.title = "DAY"
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentDayBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        println("on view created===================")
         eventsSpinner()
-        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-        date = findViewById(R.id.date)
-
-        toolbar_value = findViewById(R.id.title1)
-        toolbar_value.setText("DAY")
-
-        sp = getSharedPreferences("logged-in-user", MODE_PRIVATE)
-
-        user = eventViewModel.loggedUser!!
-
-
+        date = binding.date
         date.setText(actualDate.toString())
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
+        val recyclerView = binding.recyclerview
         adapter = EventListAdapter(this)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        val recyclerView2 = findViewById<RecyclerView>(R.id.recyclerview2)
+        val recyclerView2 = binding.recyclerview2
         adapterTask = TaskListAdapter(this)
         recyclerView2.adapter = adapterTask
-        recyclerView2.layoutManager = LinearLayoutManager(this)
+        recyclerView2.layoutManager = LinearLayoutManager(activity)
 
         tasksSpinner()
 
-        val next = findViewById<AppCompatButton>(R.id.nextButton)
+        val next = binding.nextButton
         next.setOnClickListener{
             actualDate = actualDate.plusDays(1)
             date.setText(actualDate.toString())
@@ -110,20 +88,13 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdap
             tasksSpinner()
         }
 
-        val prev = findViewById<AppCompatButton>(R.id.prevButton)
+        val prev = binding.prevButton
         prev.setOnClickListener{
             actualDate = actualDate.minusDays(1)
             date.setText(actualDate.toString())
             eventsSpinner()
             tasksSpinner()
         }
-
-
-
-
-        var fab = findViewById<FloatingActionButton>(R.id.fab)
-        registerForContextMenu(fab)
-
     }
 
     private fun tasksSpinner(){
@@ -134,11 +105,11 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdap
             for (i in newName) {
                 arr.add(i.name)
             }
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arr)
+            val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
 
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-            var bind = findViewById<Spinner>(R.id.tasksSpinner)
+            var bind = binding.tasksSpinner
             bind.adapter = arrayAdapter
 
             bind.setSelection(arrayAdapter.getPosition("all"))
@@ -160,7 +131,7 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdap
                 }
             }
         }
-        categoryViewModel.categoriesLiveData.observe(this, nameObserver)
+        categoryViewModel.categoriesLiveData.observe(requireActivity(), nameObserver)
 
     }
 
@@ -172,11 +143,11 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdap
             for (i in newName) {
                 arr.add(i.name)
             }
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arr)
+            val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
 
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-            var bind = findViewById<Spinner>(R.id.eventsSpinner)
+            var bind = binding.eventsSpinner
             bind.adapter = arrayAdapter
 
             bind.setSelection(arrayAdapter.getPosition("all"))
@@ -198,13 +169,8 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdap
                 }
             }
         }
-        categoryViewModel.categoriesLiveData.observe(this, nameObserver)
+        categoryViewModel.categoriesLiveData.observe(requireActivity(), nameObserver)
 
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.nav_menu,menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
     private fun loadEvents(){
@@ -288,77 +254,8 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdap
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun loadUser(user: User) {
-        var ns = findViewById<TextView>(R.id.name_surname)
-        var em = findViewById<TextView>(R.id.email)
-        ns.setText(user.firstName + " " + user.lastName)
-        em.setText(user.email)
-    }
-
-    // actions on click menu items
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.navigation_house -> {
-            // User chose the "Print" item
-            Toast.makeText(this,"Search action",Toast.LENGTH_LONG).show()
-            true
-        }
-        android.R.id.home ->{
-            var drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-            drawer.openDrawer(Gravity.LEFT)
-            val nav = findViewById<NavigationView>(R.id.drawer_nav_view_user)
-
-
-            nav.setNavigationItemSelectedListener {
-                when (it.itemId) {
-                    R.id.nav_logout -> {
-                        sp.apply{
-                            val spEditor = edit()
-                            spEditor.remove("user-id")
-                            spEditor.apply()
-
-                        }
-                        val intent = Intent(this, NotLoggedInActivity::class.java)
-                        startActivityForResult(intent, 1)
-                    }
-                }
-                true
-            }
-            loadUser(user)
-            true
-        }
-
-        R.id.navigation_notifications ->{
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            true
-        }
-
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        menu.setHeaderTitle("Choose an action")
-        menu.add(0, v.id, 0, "New Event")
-        menu.add(0, v.id, 0, "New Task")
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        if (item.title === "New Event") {
-            val intent = Intent(this, NewEventActivity::class.java)
-            startActivity(intent)
-        } else if (item.title === "New Task") {
-            val intent = Intent(this, NewTaskActivity::class.java)
-            startActivity(intent)
-        }
-        return true
-    }
-
     override fun onClickItem(event: Event) {
-        val intent = Intent(this, EventDetailsActivity::class.java).apply {
+        val intent = Intent(activity, EventDetailsActivity::class.java).apply {
             putExtra("event-detail", event)
         }
         startActivity(intent)
@@ -370,7 +267,7 @@ class DayActivity : AppCompatActivity(), EventListAdapter.Listener, TaskListAdap
     }
 
     override fun onClickTask(task: Task) {
-        val intent = Intent(this, TaskDetailsActivity::class.java).apply {
+        val intent = Intent(activity, TaskDetailsActivity::class.java).apply {
             putExtra("task-detail", task)
         }
         startActivity(intent)

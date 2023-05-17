@@ -56,29 +56,29 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
     fun setReminder(context: Context, dueDate: Long, message: String, name: String) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val map = ArrayList<String>()
-        map.add(message)
-        map.add(dueDate.toInt().toString())
-        map.add(name)
-        intent.putExtra(EXTRA_MESSAGE, map)
+        if(dueDate>=System.currentTimeMillis()) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, AlarmReceiver::class.java)
+            val map = ArrayList<String>()
+            map.add(message)
+            map.add(dueDate.toInt().toString())
+            map.add(name)
+            intent.putExtra(EXTRA_MESSAGE, map)
 
-        val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
+            val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                dueDate.toInt(),
+                intent,
+                flag
+            )
+            alarmManager.set(AlarmManager.RTC_WAKEUP, dueDate, pendingIntent)
         }
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            dueDate.toInt(),
-            intent,
-            flag
-        )
-        alarmManager.set(AlarmManager.RTC_WAKEUP, dueDate, pendingIntent)
-//        println(" now/////////////// " + LocalDateTime.now().atZone(
-//            ZoneOffset.UTC).toInstant().toEpochMilli())
     }
 
     fun cancelReminder(context: Context, dueDate: Long){

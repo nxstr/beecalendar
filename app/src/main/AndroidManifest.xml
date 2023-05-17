@@ -28,15 +28,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cz.cvut.fel.pda.bee_calendar.activities.DayActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="cz.cvut.fel.pda.bee_calendar.activities.NewTaskActivity"
             android:exported="false" >
 
