@@ -9,10 +9,10 @@ data class User(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
 
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val password: String,
+    var firstName: String,
+    var lastName: String,
+    var email: String,
+    var password: String,
 
     var profileImg: String? = null
 )

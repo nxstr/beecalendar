@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.permission.CAMERA" />
     <application
         android:name="cz.cvut.fel.pda.bee_calendar.MainApp"
         android:allowBackup="true"
@@ -14,10 +21,21 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31" >
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
         <receiver
             android:name=".utils.AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
+
         <activity
             android:name="cz.cvut.fel.pda.bee_calendar.activities.MainActivity"
             android:exported="true" >
@@ -34,6 +52,12 @@
         </activity>
         <activity
             android:name="cz.cvut.fel.pda.bee_calendar.activities.NewEventActivity"
+            android:exported="false" >
+
+        </activity>
+
+        <activity
+            android:name="cz.cvut.fel.pda.bee_calendar.activities.ProfileActivity"
             android:exported="false" >
 
         </activity>
@@ -58,12 +82,7 @@
 
         <activity
             android:name="cz.cvut.fel.pda.bee_calendar.activities.LoginActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false" >
         </activity>
 
         <activity
@@ -73,12 +92,7 @@
 
         <activity
             android:name="cz.cvut.fel.pda.bee_calendar.activities.NotLoggedInActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false" >
         </activity>
     </application>
 

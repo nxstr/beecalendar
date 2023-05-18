@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cz.cvut.fel.pda.bee_calendar.fragments.ProfileSettingsFragment"
+    android:background="@color/yellow_200"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="15dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="350dp"
+            android:layout_height="350dp"
+            android:elevation="12dp"
+            android:id="@+id/view2"
+            android:layout_centerHorizontal="true"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            android:layout_marginBottom="40dp">
+            <ImageView
+                android:layout_height="350dp"
+                android:layout_width="match_parent"
+                android:id="@+id/imageView1"
+                android:src="@mipmap/ic_launcher"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop">
+
+            </ImageView>
+        </androidx.cardview.widget.CardView>
+
+
+        <android.widget.Button
+
+            android:id="@+id/takePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Take photo"
+            android:textSize="25dp"
+            android:background="@drawable/button_shapes"
+            android:layout_margin="10dp"/>
+
+        <android.widget.Button
+            android:id="@+id/choosePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose photo"
+            android:textSize="25dp"
+            android:background="@drawable/button_shapes"
+            android:layout_margin="10dp"/>
+
+
+
+
+
+    </LinearLayout>
+
+</FrameLayout>

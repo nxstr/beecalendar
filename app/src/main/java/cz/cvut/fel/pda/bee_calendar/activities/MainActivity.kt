@@ -22,6 +22,7 @@ import cz.cvut.fel.pda.bee_calendar.fragments.CalendarFragment
 import cz.cvut.fel.pda.bee_calendar.fragments.DayFragment
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.fragments.SearchFragment
+import cz.cvut.fel.pda.bee_calendar.utils.BitmapConverter
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 import java.time.LocalDate
 
@@ -77,6 +78,11 @@ class MainActivity : AppCompatActivity(){
         em = findViewById(R.id.email)
         ns.setText(user.firstName + " " + user.lastName)
         em.setText(user.email)
+        if(user.profileImg!=null){
+            user.profileImg.apply {
+                findViewById<ImageView>(R.id.imageView1).setImageBitmap(this?.let { BitmapConverter.convert(it) })
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -101,6 +107,10 @@ class MainActivity : AppCompatActivity(){
 
                 nav.setNavigationItemSelectedListener {
                     when (it.itemId) {
+                        R.id.nav_profile_settings ->{
+                            val intent = Intent(this, ProfileActivity::class.java)
+                            startActivity(intent)
+                        }
                         R.id.nav_logout -> {
                             sp.apply{
                                 val spEditor = edit()
@@ -175,4 +185,6 @@ class MainActivity : AppCompatActivity(){
         }
         return true
     }
+
+
 }

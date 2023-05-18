@@ -68,7 +68,9 @@
                     android:id="@+id/imageView1"
                     android:src="@mipmap/ic_launcher"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true">
+                    android:layout_centerHorizontal="true"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop">
                 </ImageView>
             </androidx.cardview.widget.CardView>
             <LinearLayout
