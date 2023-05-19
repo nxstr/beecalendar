@@ -27,6 +27,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:text="PREVIOUS"
+                android:textSize="10dp"
                 android:layout_marginStart="5dp"
                 android:background="@color/yellow_500"/>
             <TextView
@@ -48,6 +49,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:text="NEXT"
+                android:textSize="10dp"
                 android:layout_marginEnd="5dp"
                 android:background="@color/yellow_500"/>
 

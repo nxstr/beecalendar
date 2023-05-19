@@ -39,6 +39,7 @@ class TaskDetailsActivity: AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle("TASK INFO")
 
         task = intent.extras?.get("task-detail") as Task
         alarmReceiver = AlarmReceiver()

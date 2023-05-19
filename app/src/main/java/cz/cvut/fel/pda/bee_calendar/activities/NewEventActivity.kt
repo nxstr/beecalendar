@@ -50,11 +50,12 @@ class NewEventActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle("NEW EVENT")
         alarmReceiver = AlarmReceiver()
 
         if(intent.extras!=null){
             event = intent.extras?.get("event-detail") as Event
-            binding.title.text = "EDIT EVENT"
+            supportActionBar?.setTitle("EDIT EVENT")
             setData(event!!)
         }
 

@@ -18,17 +18,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextAppearance="@id/title"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
         app:menu="@menu/action_menu"
         >
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:text="NEW EVENT"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
@@ -359,7 +351,7 @@
                 android:baselineAligned="false"
                 android:ems="10"
                 android:gravity="top"
-                android:text="notes"
+                android:hint="notes"
                 android:textSize="30dp"
                 android:paddingStart="5dp"
                 android:inputType="text|textMultiLine"

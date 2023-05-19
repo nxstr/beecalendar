@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.CategoryActivity"
     android:background="@color/yellow_200"
-    android:paddingHorizontal="15dp">
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -19,18 +19,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextAppearance="@id/title"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
 
         >
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:text="Categories"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40sp" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -45,6 +36,7 @@
         android:gravity="center|bottom"
         android:layout_below="@id/toolbar"
         android:id="@+id/buttons"
+        android:paddingHorizontal="15dp"
         >
 
         <EditText
@@ -75,13 +67,15 @@
         android:textStyle="bold"
         android:layout_below="@id/buttons"
         android:textSize="30dp"
+        android:paddingHorizontal="15dp"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/l"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/list">
+        android:layout_below="@id/list"
+        android:paddingHorizontal="15dp">
 
 
 

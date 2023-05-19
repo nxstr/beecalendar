@@ -55,11 +55,12 @@ class NewTaskActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle("EDIT TASK")
         alarmReceiver = AlarmReceiver()
 
         if(intent.extras!=null){
             task = intent.extras?.get("task-detail") as Task
-            binding.title.text = "EDIT TASK"
+            supportActionBar?.setTitle("EDIT TASK")
             setData(task!!)
         }
 

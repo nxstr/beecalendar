@@ -40,6 +40,7 @@ class EventDetailsActivity: AppCompatActivity(){
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle("EVENT INFO")
 
         event = intent.extras?.get("event-detail") as Event
         alarmReceiver = AlarmReceiver()

@@ -34,30 +34,6 @@ class ProfileActivity: AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-//        addMenuProvider(object : MenuProvider {
-//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                // Add menu items here
-//                menuInflater.inflate(R.menu.action_menu, menu)
-//                if (menu != null) {
-//                    menu.findItem(R.id.navigation_save).setVisible(false)
-//                }
-//            }
-//
-//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//                // Handle the menu selection
-////                if(menuItem.itemId==R.id.navigation_save){
-////                    Toast.makeText(
-////                        this@ProfileActivity,
-////                        "Saved", Toast.LENGTH_SHORT
-////                    ).show()
-////                }
-//                if (menuItem.itemId == android.R.id.home) {
-//                    finish()
-//                }
-//                return true
-//            }
-//        })
-
         user = userViewModel.loggedUser!!
 
         val transaction = this.supportFragmentManager.beginTransaction()
@@ -68,9 +44,6 @@ class ProfileActivity: AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.action_menu, menu)
-//        if (menu != null) {
-//            menu.findItem(R.id.navigation_save).setVisible(false)
-//        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -83,29 +56,16 @@ class ProfileActivity: AppCompatActivity() {
                         this@ProfileActivity,
                         "Saved", Toast.LENGTH_SHORT
                     ).show()
-                    val transaction = this.supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.profile_fr, ProfileSettingsFragment())
-                    transaction.commit()
+                    supportFragmentManager.popBackStack()
                 }
                 }
-//            if(fragment is PhotoFragment){
-////                if(fragment.setImg()){
-////                    Toast.makeText(
-////                        this@ProfileActivity,
-////                        "Saved", Toast.LENGTH_SHORT
-////                    ).show()
-//
-//                    val transaction = this.supportFragmentManager.beginTransaction()
-//                    transaction.replace(R.id.profile_fr, ProfileSettingsFragment())
-//                    transaction.commit()
-////                }
-//            }
             }
 
         if (item.itemId == android.R.id.home) {
             val fragment = supportFragmentManager.findFragmentById(R.id.profile_fr)
             if(fragment !is ProfileSettingsFragment) {
                 supportFragmentManager.popBackStack()
+                supportActionBar?.title = "PROFILE"
             }else if(fragment is ProfileSettingsFragment){
                 finish()
             }

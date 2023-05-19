@@ -3,6 +3,7 @@ package cz.cvut.fel.pda.bee_calendar.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
+import kotlinx.coroutines.runBlocking
 
 class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
     private lateinit var binding: ActivityCategoryBinding
@@ -38,6 +40,7 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "CATEGORIES"
 
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
@@ -62,10 +65,21 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
         }
 
         binding.addCategoryButton.setOnClickListener {
-            categoryViewModel.insert(
-                categoryName = binding.categoryName.text.toString()
-            )
-            binding.categoryName.text = null
+            var exists = false
+            runBlocking {
+                if (binding.categoryName.text.toString() != "") {
+                    if (categoryViewModel.getByName(binding.categoryName.text.toString()) != null) {
+                        exists = true
+                        Toast.makeText(this@CategoryActivity, "Category with same name already exists!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            if (!exists) {
+                categoryViewModel.insert(
+                    categoryName = binding.categoryName.text.toString()
+                )
+                binding.categoryName.text = null
+            }
         }
     }
 
@@ -81,6 +95,8 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
     }
 
     override fun deleteCategory(catId: Int?) {
+        Toast.makeText(this,
+            "All the actions from this category will be moved to default category", Toast.LENGTH_SHORT).show()
         if(catId!=null && default!=null){
             eventViewModel.getEventsByCatFlow(catId).observe(this){ events ->
                 events.let {
@@ -104,4 +120,5 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
             categoryViewModel.delete(catId)
         }
     }
+
 }

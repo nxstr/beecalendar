@@ -19,17 +19,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextAppearance="@id/title"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
         app:menu="@menu/info_menu"
         >
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:text="EVENT INFO"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
