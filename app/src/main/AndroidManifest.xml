@@ -6,16 +6,18 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.permission.VIBRATE" />
     <application
         android:name="cz.cvut.fel.pda.bee_calendar.MainApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_honeycomb1"
         android:label="Bee Calendar"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"

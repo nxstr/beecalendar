@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import cz.cvut.fel.pda.bee_calendar.activities.ProfileActivity
 import cz.cvut.fel.pda.bee_calendar.databinding.FragmentPersonalInfoBinding
 import cz.cvut.fel.pda.bee_calendar.model.User
+import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 import cz.cvut.fel.pda.bee_calendar.viewmodels.UserViewModel
 import kotlinx.coroutines.runBlocking
 
@@ -44,46 +45,6 @@ class PersonalInfoFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val toolbar = requireActivity().findViewById<>(cz.cvut.fel.pda.bee_calendar.R.id.toolbar)
-
-//        val menu = requireActivity().actionBar
-//        menu.setOnMenuItemClickListener {
-//            if(validate() && validateEmail()) {
-//                setResult()
-//                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-//                transaction.replace(cz.cvut.fel.pda.bee_calendar.R.id.profile_fr, ProfileSettingsFragment())
-//                transaction.commit()
-//            }else{
-//                println("aaaaaaaaaaaaaa")
-//            }
-//            true
-//        }
-//        val menuHost: MenuHost = requireActivity()
-////
-//        menuHost.addMenuProvider(object : MenuProvider {
-//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                // Add menu items here
-////                menuInflater.inflate(cz.cvut.fel.pda.bee_calendar.R.menu.action_menu, menu)
-//                menu.findItem(cz.cvut.fel.pda.bee_calendar.R.id.navigation_save).setVisible(true)
-//            }
-////
-//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-////                // Handle the menu selection
-////                if(menuItem.itemId==cz.cvut.fel.pda.bee_calendar.R.id.navigation_save){
-////                    if(validate() && validateEmail()) {
-////                        setResult()
-////                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-////                        transaction.replace(cz.cvut.fel.pda.bee_calendar.R.id.profile_fr, ProfileSettingsFragment())
-////                        transaction.commit()
-////                    }else{
-////                        Toast.makeText(activity, "Can not be saved", Toast.LENGTH_SHORT).show()
-////                        println("aaaaaaaaaaaaaa------------")
-////                    }
-////                }
-//
-//                return true
-//            }
-//        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
         user = userViewModel.loggedUser!!
         setData()
 
@@ -100,16 +61,19 @@ class PersonalInfoFragment: Fragment() {
 
         if (binding.firstname.text.toString() == "" || binding.lastname.text.toString() == "") {
             Toast.makeText(activity, "Name is empty!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(requireActivity())
             return false
         }
         if (binding.email.text.toString() == "") {
             Toast.makeText(activity, "Email is empty!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(requireActivity())
             return false
         }
 
         if (binding.password.text.toString() != "" && binding.password.text.toString() != "password"){
             if (binding.password.text.toString() != binding.password2.text.toString()) {
                 Toast.makeText(activity, "Password is not match!", Toast.LENGTH_SHORT).show()
+                Vibrations.vibrate(requireActivity())
                 return false
             }
         }
@@ -123,6 +87,7 @@ class PersonalInfoFragment: Fragment() {
                 val testUser = userViewModel.getByEmail(binding.email.text.toString())
                 if(testUser!=null){
                     Toast.makeText(activity, "This email is already exist!", Toast.LENGTH_SHORT).show()
+                    Vibrations.vibrate(requireActivity())
                     emailRepeat = false
                 }
             }

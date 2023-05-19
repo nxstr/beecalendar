@@ -131,13 +131,14 @@ class AlarmReceiver : BroadcastReceiver() {
                 .setContentTitle(title)
                 .setContentText(todo)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_honeycomb_black)
+                .setSmallIcon(R.mipmap.ic_honeycomb1)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent1)
                 .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
 
         notificationManager.notify(notifId, builder.build())
+        Vibrations.vibrate(context)
         
     }
 }

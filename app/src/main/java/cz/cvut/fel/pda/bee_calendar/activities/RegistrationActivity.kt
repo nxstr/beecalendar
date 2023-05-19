@@ -12,6 +12,7 @@ import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityRegistrationBinding
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.repository.UserRepository
+import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 import cz.cvut.fel.pda.bee_calendar.viewmodels.UserViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -72,6 +73,7 @@ class RegistrationActivity : AppCompatActivity() {
                         if (foundUser == null && password1.text.toString() != password2.text.toString()) {
                             this@RegistrationActivity.runOnUiThread {
                                 Toast.makeText(this@RegistrationActivity, "Passwords need to be equal.", Toast.LENGTH_SHORT).show()
+                                Vibrations.vibrate(this@RegistrationActivity)
                             }
                         } else if (foundUser == null) {
 
@@ -92,12 +94,14 @@ class RegistrationActivity : AppCompatActivity() {
                         } else {
                             this@RegistrationActivity.runOnUiThread {
                                 Toast.makeText(this@RegistrationActivity, "Email already exist.", Toast.LENGTH_SHORT).show()
+                                Vibrations.vibrate(this@RegistrationActivity)
                             }
                         }
                     }
                 }
             } else {
                 Toast.makeText(this@RegistrationActivity, "Please enter all fields.", Toast.LENGTH_SHORT).show()
+                Vibrations.vibrate(this@RegistrationActivity)
             }
         }
     }

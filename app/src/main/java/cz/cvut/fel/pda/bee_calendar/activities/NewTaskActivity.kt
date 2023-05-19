@@ -21,6 +21,7 @@ import cz.cvut.fel.pda.bee_calendar.model.enums.PriorityEnum
 import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
 import cz.cvut.fel.pda.bee_calendar.utils.AlarmReceiver
 import cz.cvut.fel.pda.bee_calendar.utils.EventActivityUtil
+import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
@@ -313,16 +314,19 @@ class NewTaskActivity : AppCompatActivity() {
         if(submitDatePicked==null){
             Toast.makeText(this,
                 "Date is necessary!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewTaskActivity)
             return false
         }
         if(binding.submitTime.text.equals("deadline time")){
             Toast.makeText(this,
                 "Time is necessary!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewTaskActivity)
             return false
         }
         if(!binding.remindTime.text.equals("time") && binding.remindDate.text.toString()=="date"){
             Toast.makeText(this,
                 "Remind must have date, not only time!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewTaskActivity)
             return false
         }
         return true

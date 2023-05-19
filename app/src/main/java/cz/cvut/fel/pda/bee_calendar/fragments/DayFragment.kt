@@ -208,8 +208,15 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
             words.let {
                 var arr = ArrayList<Event>()
                 for(i in it){
-                    if(LocalTime.parse(i.timeFrom, DateTimeFormatter.ofPattern("HH:mm")).isAfter(
-                            LocalTime.now())){
+                    if(LocalDate.parse(i.date, DateTimeFormatter.ISO_DATE).equals(LocalDate.now())) {
+                        if (LocalTime.parse(i.timeFrom, DateTimeFormatter.ofPattern("HH:mm"))
+                                .isAfter(
+                                    LocalTime.now()
+                                )
+                        ) {
+                            arr.add(i)
+                        }
+                    }else if(LocalDate.parse(i.date, DateTimeFormatter.ISO_DATE).isAfter(LocalDate.now())){
                         arr.add(i)
                     }
                 }

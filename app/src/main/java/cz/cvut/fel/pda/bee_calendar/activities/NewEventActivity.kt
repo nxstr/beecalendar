@@ -15,6 +15,7 @@ import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
 import cz.cvut.fel.pda.bee_calendar.utils.EventActivityUtil
+import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import kotlinx.coroutines.runBlocking
@@ -106,6 +107,7 @@ class NewEventActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(this,
                     "Event name must be unique!", Toast.LENGTH_SHORT).show()
+                Vibrations.vibrate(this@NewEventActivity)
             }
         } else if (item.itemId == android.R.id.home) {
             finish()
@@ -159,11 +161,13 @@ class NewEventActivity : AppCompatActivity() {
         if(submitDatePicked==null){
             Toast.makeText(this,
                 "Date is necessary!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewEventActivity)
             return false
         }
         if(binding.timeFrom.text.equals("Pick time from") || binding.timeTo.text.equals("Pick time to")){
             Toast.makeText(this,
                 "Time is necessary!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewEventActivity)
             return false
         }else{
             if(LocalTime.parse(binding.timeFrom.text, DateTimeFormatter.ofPattern("HH:mm")).isAfter(
@@ -171,6 +175,7 @@ class NewEventActivity : AppCompatActivity() {
                     ))){
                 Toast.makeText(this,
                     "Time To can not be less than time From!", Toast.LENGTH_SHORT).show()
+                Vibrations.vibrate(this@NewEventActivity)
                 return false
             }
             if(LocalTime.parse(binding.timeFrom.text, DateTimeFormatter.ofPattern("HH:mm")).equals(
@@ -178,6 +183,7 @@ class NewEventActivity : AppCompatActivity() {
                     ))){
                 Toast.makeText(this,
                     "Time To can not be same as time From!", Toast.LENGTH_SHORT).show()
+                Vibrations.vibrate(this@NewEventActivity)
                 return false
             }
         }
@@ -189,6 +195,7 @@ class NewEventActivity : AppCompatActivity() {
                         this,
                         "Repeat till date can not be less than event date!", Toast.LENGTH_SHORT
                     ).show()
+                    Vibrations.vibrate(this@NewEventActivity)
                     return false
                 }
             }else{
@@ -196,6 +203,7 @@ class NewEventActivity : AppCompatActivity() {
                     this,
                     "Dates can not be empty!", Toast.LENGTH_SHORT
                 ).show()
+                Vibrations.vibrate(this@NewEventActivity)
                 return false
             }
         }
@@ -203,6 +211,7 @@ class NewEventActivity : AppCompatActivity() {
         if(!binding.remindTime.text.equals("time") && binding.remindDate.text.toString()=="date"){
             Toast.makeText(this,
                 "Remind must have date, not only time!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewEventActivity)
             return false
         }
         return true

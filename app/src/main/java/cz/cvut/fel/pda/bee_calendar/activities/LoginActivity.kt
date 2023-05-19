@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityLoginBinding
+import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 
 class LoginActivity : AppCompatActivity() {
 
@@ -87,12 +88,14 @@ class LoginActivity : AppCompatActivity() {
                         } else {
                             this@LoginActivity.runOnUiThread {
                                 Toast.makeText(this@LoginActivity, "Invalid login.", Toast.LENGTH_SHORT).show()
+                                Vibrations.vibrate(this@LoginActivity)
                             }
                         }
                     }
                 }
             } else {
                 Toast.makeText(this@LoginActivity, "Please enter all fields.", Toast.LENGTH_SHORT).show()
+                Vibrations.vibrate(this@LoginActivity)
             }
         }
     }

@@ -12,6 +12,7 @@ import cz.cvut.fel.pda.bee_calendar.utils.CategoryListAdapter
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityCategoryBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
+import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
@@ -71,6 +72,7 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
                     if (categoryViewModel.getByName(binding.categoryName.text.toString()) != null) {
                         exists = true
                         Toast.makeText(this@CategoryActivity, "Category with same name already exists!", Toast.LENGTH_SHORT).show()
+                        Vibrations.vibrate(this@CategoryActivity)
                     }
                 }
             }

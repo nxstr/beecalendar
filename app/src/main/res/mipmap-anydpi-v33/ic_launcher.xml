@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/ic_yellow_background" />
-    <foreground android:drawable="@drawable/ic_honeycomb_foreground" />
-    <monochrome android:drawable="@drawable/ic_honeycomb_foreground" />
+    <background android:drawable="@drawable/ic_honeycomb_background1" />
+    <foreground android:drawable="@drawable/ic_honeycomb_foreground1" />
+    <monochrome android:drawable="@drawable/ic_honeycomb_foreground1" />
 </adaptive-icon>
