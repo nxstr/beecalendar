@@ -158,6 +158,12 @@ class NewEventActivity : AppCompatActivity() {
         if(binding.repeatToDate.text.toString()!="date"){
             repeatDatePicked = LocalDate.parse(binding.repeatToDate.text, DateTimeFormatter.ISO_DATE)
         }
+        if(binding.eventName.text.toString()==""){
+            Toast.makeText(this,
+                "Event name is necessary!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewEventActivity)
+            return false
+        }
         if(submitDatePicked==null){
             Toast.makeText(this,
                 "Date is necessary!", Toast.LENGTH_SHORT).show()

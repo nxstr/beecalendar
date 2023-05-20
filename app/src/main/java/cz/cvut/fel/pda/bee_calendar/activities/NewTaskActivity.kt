@@ -301,6 +301,12 @@ class NewTaskActivity : AppCompatActivity() {
         if(binding.remindDate.text.toString()!="date"){
             remindDatePicked = LocalDate.parse(binding.remindDate.text, DateTimeFormatter.ISO_DATE)
         }
+        if(binding.taskName.text.toString()==""){
+            Toast.makeText(this,
+                "Name is necessary!", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewTaskActivity)
+            return false
+        }
         if(submitDatePicked==null){
             Toast.makeText(this,
                 "Date is necessary!", Toast.LENGTH_SHORT).show()

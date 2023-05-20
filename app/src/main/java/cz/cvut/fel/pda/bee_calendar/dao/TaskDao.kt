@@ -13,7 +13,7 @@ interface TaskDao {
     @Query("SELECT * FROM Tasks WHERE userId = :userId")
     fun getAllTasksFlow(userId: Int): Flow<List<Task>>
 
-    @Query("SELECT * FROM Tasks WHERE userId = :userId AND date = :date")
+    @Query("SELECT * FROM Tasks WHERE userId = :userId AND date = :date ORDER BY deadlineTime ASC")
     fun getAllTasksByDateFlow(userId: Int, date: String): Flow<List<Task>>
 
     @Query("SELECT * FROM Tasks WHERE id = :id")

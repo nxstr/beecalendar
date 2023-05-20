@@ -18,6 +18,7 @@ import cz.cvut.fel.pda.bee_calendar.databinding.FragmentDayBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.Task
+import cz.cvut.fel.pda.bee_calendar.model.enums.PriorityEnum
 import cz.cvut.fel.pda.bee_calendar.utils.EventListAdapter
 import cz.cvut.fel.pda.bee_calendar.utils.TaskListAdapter
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
@@ -101,6 +102,7 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
             val arr = kotlin.collections.ArrayList<String>()
             arr.add("all")
             arr.add("active")
+            arr.add("priority")
             for (i in newName) {
                 arr.add(i.name)
             }
@@ -119,6 +121,8 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
                         loadTasks()
                     }else if(p2==1){
                         loadActiveTasks()
+                    }else if(p2==2){
+                        loadTasksByPriority()
                     }else{
                         loadTasksByCategory(arr.get(p2))
                     }
@@ -196,6 +200,19 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
                     }
                 }
                 adapterTask.submitList(arr)
+            }
+        }
+    }
+
+    private fun loadTasksByPriority(){
+        taskViewModel.getTasksByDate(actualDate).observe(this) { words ->
+            words.let {
+                var arr = ArrayList<Task>()
+                for(i in it){
+                        arr.add(i)
+                }
+                val ans = arr.sortedByDescending { it.priority.value }
+                adapterTask.submitList(ans)
             }
         }
     }

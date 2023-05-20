@@ -46,7 +46,7 @@
                 android:layout_margin="15dp"
                 android:background="@color/yellow_500"
                 android:ems="10"
-                android:hint="task name"
+                android:hint="event name"
                 android:padding="0dp"
                 android:paddingStart="5dp"
                 android:selectAllOnFocus="true"
