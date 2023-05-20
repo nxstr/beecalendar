@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EventDao {
-    @Query("SELECT * FROM Events WHERE userId = :userId")
-    suspend fun getAllEvents(userId: Int): List<Event>
 
     @Query("SELECT * FROM Events WHERE userId = :userId")
     fun getAllEventsFlow(userId: Int): Flow<List<Event>>
@@ -21,11 +19,8 @@ interface EventDao {
     @Query("SELECT * FROM Events WHERE id = :id")
     suspend fun getById(id: Int): Event?
 
-    @Query("SELECT * FROM Events WHERE name = :name")
-    suspend fun getByName(name: String): List<Event>
-
-    @Query("SELECT * FROM Events WHERE categoryId = :categoryId")
-    suspend fun getAllEventsByCategory(categoryId: Int): List<Event>
+    @Query("SELECT * FROM Events WHERE name = :name AND userId = :userId")
+    suspend fun getByName(userId: Int, name: String): List<Event>
 
     @Query("SELECT * FROM Events WHERE userId = :userId AND categoryId = :categoryId")
     fun getAllEventsByCategoryFlow(userId: Int, categoryId: Int): Flow<List<Event>>

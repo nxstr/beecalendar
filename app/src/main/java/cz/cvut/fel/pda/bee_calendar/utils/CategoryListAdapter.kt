@@ -24,9 +24,7 @@ class CategoryListAdapter(private val listener: Listener) : ListAdapter<Category
         holder.bind(current)
 
         holder.itemView.findViewById<ImageButton>(R.id.catDelButton).setOnClickListener {
-                println("***************************222222 "+ getItem(position).id)
                 listener.deleteCategory(getItem(position).id)
-                //зробити спінер і кнопку видалення одну, бо це якийсь треш((
         }
     }
 

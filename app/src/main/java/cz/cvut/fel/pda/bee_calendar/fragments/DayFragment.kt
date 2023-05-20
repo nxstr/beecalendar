@@ -63,7 +63,6 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        println("on view created===================")
         eventsSpinner()
         date = binding.date
         date.setText(actualDate.toString())
@@ -121,7 +120,6 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
                     }else if(p2==1){
                         loadActiveTasks()
                     }else{
-                        println("arr get p2>>>>>>>>>>>>>>>>>>> " + arr.get(p2))
                         loadTasksByCategory(arr.get(p2))
                     }
                 }
@@ -159,7 +157,6 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
                     }else if(p2==1){
                         loadActiveEvents()
                     }else{
-                        println("arr get p2>>>>>>>>>>>>>>>>>>> " + arr.get(p2))
                         loadEventsByCategory(arr.get(p2))
                     }
                 }
@@ -232,9 +229,7 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
                     var arr = ArrayList<Task>()
                     for(i in it){
                         if(i.categoryId == categoryViewModel.getByName(catName)?.id){
-                            //це список категорій для різних юзерів
                             arr.add(i)
-                            println("cat Name????????????????????? " + i.categoryId)
                         }
                     }
                     adapterTask.submitList(arr)
@@ -250,9 +245,7 @@ class DayFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listen
                     var arr = ArrayList<Event>()
                     for(i in it){
                         if(i.categoryId == categoryViewModel.getByName(catName)?.id){
-                            //це список категорій для різних юзерів
                             arr.add(i)
-                            println("cat Name????????????????????? " + i.categoryId)
                         }
                     }
                     adapter.submitList(arr)

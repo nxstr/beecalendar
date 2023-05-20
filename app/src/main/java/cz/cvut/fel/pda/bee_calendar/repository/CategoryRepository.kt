@@ -14,11 +14,6 @@ class CategoryRepository(
     }
 
     @WorkerThread
-    suspend fun getAll(userId: Int): List<Category> {
-        return categoryDao.getAllCategories(userId)
-    }
-
-    @WorkerThread
     suspend fun insert(vararg category: Category) {
         categoryDao.insert(*category)
     }
@@ -26,11 +21,6 @@ class CategoryRepository(
     @WorkerThread
     suspend fun delete(id: Int) {
         categoryDao.delete(id)
-    }
-
-    @WorkerThread
-    fun existsByName(name: String): Boolean {
-        return categoryDao.existsByName(name)
     }
 
     @WorkerThread

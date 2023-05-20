@@ -67,13 +67,14 @@
             android:background="@null"
             android:contentDescription="add_activity"
             android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:src="@drawable/ic_plus_black"
 
-            app:backgroundTint="@color/white"
-            app:fabCustomSize="64dp"
+            app:backgroundTint="@color/yellow_200"
             app:fabSize="auto"
             android:layout_gravity="center"
             app:layout_anchorGravity="center"
-            app:maxImageSize="36dp" />
+            app:maxImageSize="45dp"
+            app:fabCustomSize="45dp"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

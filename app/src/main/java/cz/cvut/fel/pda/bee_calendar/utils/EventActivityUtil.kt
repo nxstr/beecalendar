@@ -3,7 +3,6 @@ package cz.cvut.fel.pda.bee_calendar.utils
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
 import android.widget.TimePicker

@@ -2,18 +2,14 @@ package cz.cvut.fel.pda.bee_calendar.viewmodels
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import cz.cvut.fel.pda.bee_calendar.MainApp
-import cz.cvut.fel.pda.bee_calendar.dao.TaskDao
-import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.Task
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.repository.CategoryRepository
 import cz.cvut.fel.pda.bee_calendar.repository.TaskRepository
 import cz.cvut.fel.pda.bee_calendar.repository.UserRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
@@ -26,9 +22,6 @@ class TaskViewModel (
 ) : ViewModel() {
 
     private val loggedInUserId = loggedInSharedPreferences.getInt("user-id", 0)
-
-    val allCategoriesLiveData = categoryRepository.getAllFlow(loggedInUserId).asLiveData()
-    val allTasksLiveData = taskRepository.getAllFlow(loggedInUserId).asLiveData()
 
     var loggedUser: User? = null
     init {

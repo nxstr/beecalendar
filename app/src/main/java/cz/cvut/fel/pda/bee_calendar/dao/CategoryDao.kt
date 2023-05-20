@@ -12,9 +12,6 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories WHERE userId = :userId")
     fun getAllCategoriesFlow(userId: Int): Flow<List<Category>>
 
-    @Query("SELECT * FROM Categories WHERE userId = :userId")
-    suspend fun getAllCategories(userId: Int): List<Category>
-
     @Query("SELECT EXISTS(SELECT * FROM Categories WHERE name = :name)")
     fun existsByName(name : String) : Boolean
 

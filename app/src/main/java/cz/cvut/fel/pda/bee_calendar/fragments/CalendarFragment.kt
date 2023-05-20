@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.activities.EventDetailsActivity
 import cz.cvut.fel.pda.bee_calendar.activities.MainActivity
 import cz.cvut.fel.pda.bee_calendar.activities.TaskDetailsActivity
@@ -100,9 +101,7 @@ class CalendarFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.L
 
                     actualDate = LocalDate.of(year, month + 1, dayOfMonth)
 
-                    val Date = (dayOfMonth.toString() + "."
-                            + (month + 1) + "." + year)
-                    dateTV.setText(Date)
+                    dateTV.setText(actualDate.toString())
                     if (recyclerView.adapter == adapter) {
                         loadEvents(adapter)
                     } else if (recyclerView.adapter == adapter1) {
@@ -112,7 +111,6 @@ class CalendarFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.L
     }
 
     override fun onClickItem(event: Event) {
-        println("clicked =================== " + event.name)
         val intent = Intent(activity, EventDetailsActivity::class.java).apply {
             putExtra("event-detail", event)
         }

@@ -2,7 +2,6 @@ package cz.cvut.fel.pda.bee_calendar.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -11,7 +10,6 @@ import androidx.activity.viewModels
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityRegistrationBinding
 import cz.cvut.fel.pda.bee_calendar.model.User
-import cz.cvut.fel.pda.bee_calendar.repository.UserRepository
 import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 import cz.cvut.fel.pda.bee_calendar.viewmodels.UserViewModel
 import kotlinx.coroutines.Dispatchers

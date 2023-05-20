@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,7 +21,6 @@ import cz.cvut.fel.pda.bee_calendar.utils.TaskListAdapter
 import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
 
 class SearchFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Listener {
 
@@ -95,7 +91,6 @@ class SearchFragment: Fragment(), EventListAdapter.Listener, TaskListAdapter.Lis
     }
 
     override fun onClickItem(event: Event) {
-        println("clicked =================== " + event.name)
         val intent = Intent(activity, EventDetailsActivity::class.java).apply {
             putExtra("event-detail", event)
         }

@@ -24,11 +24,6 @@ class TaskListAdapter (private val listener: Listener): ListAdapter<Task, TaskLi
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(listener, current)
-
-//        holder.itemView.findViewById<ImageButton>(R.id.catDelButton).setOnClickListener {
-//            println("***************************222222 "+ getItem(position).id)
-//            //зробити спінер і кнопку видалення одну, бо це якийсь треш((
-//        }
     }
 
 
@@ -54,7 +49,6 @@ class TaskListAdapter (private val listener: Listener): ListAdapter<Task, TaskLi
             taskIsActive.isChecked = !task.isActive
 
             taskNameText.setOnClickListener {
-                println("clicked =================== " + taskNameText.text)
                 listener.onClickTask(task)
             }
             taskIsActive.setOnClickListener {

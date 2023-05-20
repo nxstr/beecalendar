@@ -2,16 +2,8 @@ package cz.cvut.fel.pda.bee_calendar.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -41,7 +33,6 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (sp.contains("user-id")) {
-            println("here------------------------" + sp.all)
 
             startActivity(
                 Intent(this@LoginActivity, MainActivity::class.java)
@@ -80,7 +71,6 @@ class LoginActivity : AppCompatActivity() {
                         val foundUser = userViewModel.getByEmail(email.text.toString())
                         if (foundUser != null && foundUser.password == password.text.toString()) {
                             setToContext(foundUser.id!!)
-                            println("---------------------------user logged in "+ sp.all)
 
                             startActivity(
                                 Intent(this@LoginActivity, MainActivity::class.java)

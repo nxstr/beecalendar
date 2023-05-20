@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fel.pda.bee_calendar.MainApp
-import cz.cvut.fel.pda.bee_calendar.dao.CategoryDao
 import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.repository.CategoryRepository
 import kotlinx.coroutines.launch
@@ -28,10 +27,6 @@ class CategoryViewModel(
 
     suspend fun getByName(name: String): Category? {
         return categoryRepository.getByName(loggedInUserId, name)
-    }
-
-    suspend fun getAll(): List<Category> {
-        return categoryRepository.getAll(loggedInUserId)
     }
 
     fun insert(categoryName: String) = viewModelScope.launch {

@@ -11,8 +11,6 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import cz.cvut.fel.pda.bee_calendar.R
 import cz.cvut.fel.pda.bee_calendar.activities.MainActivity
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 
 /**
@@ -35,15 +33,11 @@ class AlarmReceiver : BroadcastReceiver() {
      *On Receive of Alarm event
      * */
     override fun onReceive(context: Context, intent: Intent) {
-//        val todo = intent.getStringExtra(EXTRA_MESSAGE)
-//        val notifId = System.currentTimeMillis().toInt() + (0..1000).random()
 
         val hashMap = intent.getSerializableExtra(EXTRA_MESSAGE) as ArrayList<String>
         val todo = hashMap.get(0)
         val notifId = hashMap.get(1).toInt()
         val title = "Bee Calendar " + hashMap.get(2)
-
-        println("here------------------------ ")
 
         showReminderNotification(context, title, todo, notifId)
     }

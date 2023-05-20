@@ -2,17 +2,12 @@ package cz.cvut.fel.pda.bee_calendar.repository
 
 import androidx.annotation.WorkerThread
 import cz.cvut.fel.pda.bee_calendar.dao.EventDao
-import cz.cvut.fel.pda.bee_calendar.model.Category
 import cz.cvut.fel.pda.bee_calendar.model.Event
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 
 class EventRepository(
     private val eventDao: EventDao
 ) {
-    fun getAllFlow(userId: Int): Flow<List<Event>> {
-        return eventDao.getAllEventsFlow(userId)
-    }
 
     fun getAllByDate(userId: Int, date: String): Flow<List<Event>> {
         return eventDao.getAllEventsByDateFlow(userId, date)
@@ -20,11 +15,6 @@ class EventRepository(
 
     fun getAllByCat(userId: Int, catId: Int): Flow<List<Event>> {
         return eventDao.getAllEventsByCategoryFlow(userId, catId)
-    }
-
-    @WorkerThread
-    suspend fun getAll(userId: Int): List<Event> {
-        return eventDao.getAllEvents(userId)
     }
 
     @WorkerThread
@@ -48,13 +38,8 @@ class EventRepository(
     }
 
     @WorkerThread
-    suspend fun getByName(name: String): List<Event> {
-        return eventDao.getByName(name)
-    }
-
-    @WorkerThread
-    suspend fun getAllEventsByCategory(categoryId: Int): List<Event> {
-        return eventDao.getAllEventsByCategory(categoryId)
+    suspend fun getByName(userId: Int, name: String): List<Event> {
+        return eventDao.getByName(userId, name)
     }
 
     @WorkerThread

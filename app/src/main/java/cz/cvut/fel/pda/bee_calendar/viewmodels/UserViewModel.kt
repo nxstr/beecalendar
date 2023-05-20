@@ -51,9 +51,14 @@ class UserViewModel(
         return userRepository.getByEmail(email)
     }
 
+    suspend fun getById(id: Int): User?{
+        return userRepository.getByUserId(id);
+    }
+
 
     fun updateUser() = viewModelScope.launch {
         userRepository.update(loggedUser!!)
+        println("user model============== " + loggedUser!!.firstName)
     }
 
     class UserViewModelFactory(

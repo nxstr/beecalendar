@@ -9,10 +9,6 @@ class UserRepository(
     private val userDao: UserDao
 ) {
 
-    fun getAll(): Flow<List<User>> {
-        return userDao.getAllUsersFlow()
-    }
-
     @WorkerThread
     suspend fun getByUserId(userId: Int): User {
         return userDao.getByUserId(userId)

@@ -2,7 +2,6 @@ package cz.cvut.fel.pda.bee_calendar.fragments
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -18,7 +17,6 @@ import cz.cvut.fel.pda.bee_calendar.databinding.FragmentProfileSettingsBinding
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.utils.BitmapConverter
 import cz.cvut.fel.pda.bee_calendar.viewmodels.UserViewModel
-import java.io.File
 
 
 class ProfileSettingsFragment: Fragment() {
@@ -50,14 +48,10 @@ class ProfileSettingsFragment: Fragment() {
 
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-//                menuInflater.inflate(cz.cvut.fel.pda.bee_calendar.R.menu.action_menu, menu)
                 menu.findItem(cz.cvut.fel.pda.bee_calendar.R.id.navigation_save).setVisible(false)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -66,16 +60,9 @@ class ProfileSettingsFragment: Fragment() {
         user = userViewModel.loggedUser!!
         binding.name.setText(user.firstName + " " + user.lastName)
         binding.email.setText(user.email)
-//        user.profileImg = null
-//        userViewModel.updateUser()
         if(user.profileImg!="" && user.profileImg!=null) {
-//            println("here----------------- " + user.profileImg)
-//            val imgFile = File(user.profileImg)
-//            val myBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-//            binding.imageView1.setImageBitmap(myBitmap)
             user.profileImg.apply {
                 binding.imageView1.setImageBitmap(this?.let { BitmapConverter.convert(it) })
-
             }
         }
 
@@ -91,8 +78,6 @@ class ProfileSettingsFragment: Fragment() {
             val transaction = requireActivity().supportFragmentManager.beginTransaction().addToBackStack("photo")
             transaction.replace(cz.cvut.fel.pda.bee_calendar.R.id.profile_fr, PhotoFragment())
             transaction.commit()
-//            val intent = Intent(activity, PhotoActivity::class.java)
-//            startActivity(intent)
         }
         binding.logout.setOnClickListener {
             sp.apply{

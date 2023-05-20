@@ -21,11 +21,6 @@ class EventListAdapter (private val listener: Listener): ListAdapter<Event, Even
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(listener, current)
-
-//        holder.itemView.findViewById<ImageButton>(R.id.catDelButton).setOnClickListener {
-//            println("***************************222222 "+ getItem(position).id)
-//            //зробити спінер і кнопку видалення одну, бо це якийсь треш((
-//        }
     }
 
 
@@ -43,7 +38,6 @@ class EventListAdapter (private val listener: Listener): ListAdapter<Event, Even
             eventTimeTo.text = event.timeTo
 
             eventNameText.setOnClickListener {
-                println("clicked =================== " + eventNameText.text)
                 listener.onClickItem(event)
             }
         }

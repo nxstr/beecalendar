@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +18,7 @@ import cz.cvut.fel.pda.bee_calendar.fragments.PersonalInfoFragment
 import cz.cvut.fel.pda.bee_calendar.fragments.PhotoFragment
 import cz.cvut.fel.pda.bee_calendar.fragments.ProfileSettingsFragment
 import cz.cvut.fel.pda.bee_calendar.model.User
+import cz.cvut.fel.pda.bee_calendar.utils.BitmapConverter
 import cz.cvut.fel.pda.bee_calendar.viewmodels.UserViewModel
 
 class ProfileActivity: AppCompatActivity() {

@@ -188,7 +188,6 @@ class NewEventActivity : AppCompatActivity() {
             }
         }
         if(!repeatE.equals(RepeatEnum.ONCE) ) {
-            println("dateeeeeeeeeeeeeeeeeee " + repeatDatePicked)
             if(submitDatePicked!=null && repeatDatePicked!=null) {
                 if (submitDatePicked!!.isAfter(repeatDatePicked)) {
                     Toast.makeText(
@@ -240,11 +239,8 @@ class NewEventActivity : AppCompatActivity() {
 
         }else if(repeatE!=RepeatEnum.ONCE && repeatE==event.repeatEnum){
             if(submitDatePicked.toString()==event.date && repeatDatePicked.toString() == event.repeatTo){
-                //якщо не змінилась основна дата і не змінився репіт взагалі
                 if((remindDatePicked!=null && remindDatePicked.toString()==event.remind.split("/").get(0)) ||
                             (remindDatePicked==null && event.remind=="")){
-                    //якщо при цьому ремайнд існує і дата ремайнду не змінилась
-                    // або якщо ремайнду не існувало і не існує
                     runBlocking {
                         for(ev in eventViewModel.getByName(event.name)){
                             deleteReminder(ev)
@@ -417,7 +413,9 @@ class NewEventActivity : AppCompatActivity() {
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
-                    println(" not selected---------------------")
+                    runBlocking {
+                        catId = categoryViewModel.getByName("default")?.id!!
+                    }
                 }
             }
         }

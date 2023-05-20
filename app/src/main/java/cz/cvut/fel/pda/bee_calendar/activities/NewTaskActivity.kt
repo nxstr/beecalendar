@@ -7,23 +7,18 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.bee_calendar.R
-import cz.cvut.fel.pda.bee_calendar.databinding.ActivityNewEventBinding
 import cz.cvut.fel.pda.bee_calendar.databinding.ActivityNewTaskBinding
 import cz.cvut.fel.pda.bee_calendar.model.Category
-import cz.cvut.fel.pda.bee_calendar.model.Event
 import cz.cvut.fel.pda.bee_calendar.model.Task
 import cz.cvut.fel.pda.bee_calendar.model.enums.PriorityEnum
-import cz.cvut.fel.pda.bee_calendar.model.enums.RepeatEnum
 import cz.cvut.fel.pda.bee_calendar.utils.AlarmReceiver
 import cz.cvut.fel.pda.bee_calendar.utils.EventActivityUtil
 import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
 import cz.cvut.fel.pda.bee_calendar.viewmodels.CategoryViewModel
-import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.TaskViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
@@ -56,7 +51,7 @@ class NewTaskActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle("EDIT TASK")
+        supportActionBar?.setTitle("NEW TASK")
         alarmReceiver = AlarmReceiver()
 
         if(intent.extras!=null){
@@ -93,7 +88,6 @@ class NewTaskActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.navigation_save) {
-//            if(validateName()) {
                 if(validateDateTime()) {
                     Toast.makeText(
                         this,
@@ -107,10 +101,6 @@ class NewTaskActivity : AppCompatActivity() {
                         finish()
                     }
                 }
-//            }else{
-//                Toast.makeText(this,
-//                    "Event name must be unique!", Toast.LENGTH_SHORT).show()
-//            }
         } else if (item.itemId == android.R.id.home) {
             finish()
         }
@@ -331,19 +321,5 @@ class NewTaskActivity : AppCompatActivity() {
         }
         return true
     }
-
-
-    private fun validateName(): Boolean{
-        var exists = true
-        runBlocking {
-            if((task!=null && binding.taskName.text.toString()!= task!!.name) || (task==null)){
-                if (!taskViewModel.getByName(binding.taskName.text.toString()).isEmpty()) {
-                    exists = false
-                }
-            }
-        }
-        return exists
-    }
-
 
 }

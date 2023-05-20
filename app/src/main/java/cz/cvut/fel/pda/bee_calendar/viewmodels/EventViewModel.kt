@@ -22,9 +22,6 @@ class EventViewModel(
 
     private val loggedInUserId = loggedInSharedPreferences.getInt("user-id", 0)
 
-    val allCategoriesLiveData = categoryRepository.getAllFlow(loggedInUserId).asLiveData()
-    val allEventLiveData = eventRepository.getAllFlow(loggedInUserId).asLiveData()
-
     var loggedUser: User? = null
     init {
         val loggedInUserId = loggedInSharedPreferences.getInt("user-id", 0)
@@ -55,20 +52,12 @@ class EventViewModel(
         eventRepository.delete(id)
     }
 
-//    fun deleteCategory(categoryId: Int) = viewModelScope.launch {
-//        categoryRepository.delete(categoryId)
-//
-////        for(event in eventRepository.getAllEventsByCategory(categoryId)) {
-////            eventRepository.delete(event.id)
-////        }
-//    }
-
     fun deleteAll() = viewModelScope.launch {
         eventRepository.deleteAll()
     }
 
     suspend fun getByName(name: String): List<Event>{
-        return eventRepository.getByName(name)
+        return eventRepository.getByName(loggedInUserId, name)
     }
 
     class EventViewModelFactory(

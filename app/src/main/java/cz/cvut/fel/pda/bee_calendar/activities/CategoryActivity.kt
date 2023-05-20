@@ -50,7 +50,6 @@ class CategoryActivity: AppCompatActivity(), CategoryListAdapter.Listener {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         categoryViewModel.categoriesLiveData.observe(this) { words ->
-            // Update the cached copy of the words in the adapter.
             words.let {
 
                 val arr = ArrayList<Category>()

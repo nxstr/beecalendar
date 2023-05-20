@@ -1,21 +1,17 @@
 package cz.cvut.fel.pda.bee_calendar.fragments
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import android.widget.Toolbar
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import cz.cvut.fel.pda.bee_calendar.activities.ProfileActivity
 import cz.cvut.fel.pda.bee_calendar.databinding.FragmentPersonalInfoBinding
 import cz.cvut.fel.pda.bee_calendar.model.User
 import cz.cvut.fel.pda.bee_calendar.utils.Vibrations
+import cz.cvut.fel.pda.bee_calendar.viewmodels.EventViewModel
 import cz.cvut.fel.pda.bee_calendar.viewmodels.UserViewModel
 import kotlinx.coroutines.runBlocking
 
@@ -92,7 +88,6 @@ class PersonalInfoFragment: Fragment() {
                 }
             }
         }
-        println("email ================ " + emailRepeat)
         return emailRepeat
     }
 
@@ -110,7 +105,6 @@ class PersonalInfoFragment: Fragment() {
             userViewModel.updateUser()
             result = true
         }
-        println("here-----------------res" + result)
         return result
     }
 
